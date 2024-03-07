@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import './App.css'
 
 function App() {
   const canvasRef = useRef(null);
@@ -20,19 +21,18 @@ function App() {
     }
 
     function handleMouseover(e) {
-      if(isDrawing){
-        const endX = e.clientX-canvas.getBoundingClientRect().left;
-        const endY = e.clientY-canvas.getBoundingClientRect().top;
-        drawLine(startX, startY, endX, endY);
-        startX = endX;
-        startY = endY;
-      }
+      if (!isDrawing) return;
+      const endX = e.clientX - canvas.getBoundingClientRect().left;
+      const endY = e.clientY - canvas.getBoundingClientRect().top;
+      drawLine(startX, startY, endX, endY);
+      startX = endX;
+      startY = endY;
     }
 
     function handleMousedown(e) {
       isDrawing = true;
-      startX = e.clientX-canvas.getBoundingClientRect().left;
-      startY = e.clientY-canvas.getBoundingClientRect().top;
+      startX = e.clientX - canvas.getBoundingClientRect().left;
+      startY = e.clientY - canvas.getBoundingClientRect().top;
     }
     function handleMouseup(e) {
       isDrawing = false;
@@ -50,25 +50,24 @@ function App() {
   }, []);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "700px",
-        width: "100%",
-      }}
-    >
-      <canvas
-        style={{
-          height: "70vh",
-          width: "70vh",
-          border: "0px solid black",
-          boxShadow: "0 0 4px #000",
-        }}
-        ref={canvasRef}
-      ></canvas>
+    <div id="container" style={{ display: 'flex' }}>
+  <div id="sidebar">
+    <h1 id="drawRTC">drawRTC</h1>
+    <div className="input-container" id='colorpicker'>
+      <label htmlFor="stroke">Stroke</label>
+      <input id="stroke" name="stroke" type="color" />
     </div>
+    <div className="input-container" id='linewidth'>
+      <label htmlFor="lineWidth">Line Width</label>
+      <input id="lineWidth" name="lineWidth" type="number" value="5" />
+    </div>
+    <button id="clear">Clear</button>
+  </div>
+  <div className="canvas-container">
+    <canvas className="canvas" ref={canvasRef}></canvas>
+  </div>
+</div>
+
   );
 }
 
