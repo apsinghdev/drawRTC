@@ -12,12 +12,6 @@ function App() {
     let startY = 0;
     const ctx = canvas.getContext("2d");
 
-    const canvasHeight = canvas.getBoundingClientRect().height;
-    const canvasWidht = canvas.getBoundingClientRect().width;
-
-    const canvasOffsetX = canvas.getBoundingClientRect().left;
-    const canvasOffsetY = canvas.getBoundingClientRect().top;
-
     canvas.width = canvas.getBoundingClientRect().width;
     canvas.height = canvas.getBoundingClientRect().height;
     function drawLine(sx, sy, ex, ey) {
