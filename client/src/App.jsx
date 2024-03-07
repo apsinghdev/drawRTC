@@ -4,21 +4,23 @@ import "./App.css";
 function App() {
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
+  let color = '#000000'
+  let ctx;
+  let canvas;
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    canvas = canvasRef.current;
     let isDrawing = false;
     let startX = 0;
     let startY = 0;
-    const ctx = canvas.getContext("2d");
+    ctx = canvas.getContext("2d");
+    
 
     canvas.width = canvas.getBoundingClientRect().width;
     canvas.height = canvas.getBoundingClientRect().height;
     function drawLine(sx, sy, ex, ey) {
       ctx.moveTo(sx, sy);
       ctx.lineTo(ex, ey);
-      ctx.strokeStyle = ctx.strokeStyle;
-      ctx.lineWidth = ctx.lineWidth;
       ctx.lineCap = "round";
       ctx.stroke();
     }
@@ -49,17 +51,6 @@ function App() {
     canvas.addEventListener("mousedown", handleMousedown);
     canvas.addEventListener("mouseup", handleMouseup);
 
-    const sidebar = sidebarRef.current;
-    sidebar.addEventListener("click", (e) => {
-      if (e.target.id === "clear") {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      } else if (e.target.id === "stroke") {
-        ctx.strokeStyle = e.target.value;
-      } else if (e.target.id === "lineWidth") {
-        ctx.lineWidth = e.target.value;
-      }
-    });
-
     return () => {
       canvas.removeEventListener("mousemove", handleMouseover);
       canvas.removeEventListener("mousedown", handleMousedown);
@@ -67,13 +58,32 @@ function App() {
     };
   }, []);
 
+  function clearRect(e){
+    if (e.target.id === "clear") {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function addStroke(e){
+    if(e.target.id === "stroke"){
+      color = e.target.value;
+      ctx.strokeStyle = color;
+    }
+  }
+
+  function addLineWidth(e){
+    if (e.target.id === "lineWidth") {
+      ctx.lineWidth = e.target.value;
+    }
+  }
+
   return (
     <div id="container" style={{ display: "flex" }}>
       <div id="sidebar" ref={sidebarRef}>
         <h1 id="drawRTC">drawRTC</h1>
         <div className="input-container" id="colorpicker">
           <label htmlFor="stroke">Stroke</label>
-          <input id="stroke" name="stroke" type="color" />
+          <input id="stroke" name="stroke" type="color" defaultValue={color} onInput={addStroke}/>
         </div>
         <div className="input-container" id="linewidth">
           <label htmlFor="lineWidth">Line Width</label>
@@ -81,10 +91,11 @@ function App() {
             id="lineWidth"
             name="lineWidth"
             type="number"
-            defaultValue="5"
+            defaultValue="3"
+            onInput={addLineWidth} 
           />
         </div>
-        <button id="clear">Clear</button>
+        <button id="clear" onClick={clearRect}>Clear</button>
       </div>
       <div className="canvas-container">
         <canvas className="canvas" ref={canvasRef}></canvas>
