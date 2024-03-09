@@ -6,8 +6,10 @@ import cors from 'cors';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
-const PORT = 8080;
+const io = new Server(server, {
+    cors: {origin: '*'}
+});
+const PORT = 8000;
 
 app.use(cors({origin: '*'}))
 
@@ -19,6 +21,6 @@ io.on('connection', (socket)=>{
     console.log('user connected socket')
 })
 
-app.listen(PORT, ()=>{
+server.listen(PORT, ()=>{
     console.log(`server running on ${PORT}`)
 })

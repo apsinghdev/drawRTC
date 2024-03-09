@@ -1,6 +1,12 @@
 import { useEffect, useRef } from "react";
 import "./App.css";
+import {io} from 'socket.io-client';
 
+const socket = io('http://localhost:8000');
+
+socket.on('connect', (socket)=>{
+  console.log('socket connected on client side');
+})
 function App() {
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
