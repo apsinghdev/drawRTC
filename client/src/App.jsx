@@ -13,6 +13,7 @@ function App() {
   let color = '#000000'
   let ctx;
   let canvas;
+  let lineWidth;
 
   useEffect(() => {
     canvas = canvasRef.current;
@@ -24,21 +25,29 @@ function App() {
 
     canvas.width = canvas.getBoundingClientRect().width;
     canvas.height = canvas.getBoundingClientRect().height;
-    function drawLine(sx, sy, ex, ey) {
+
+    function drawLine(sx, sy, ex, ey, color, lineWidth) {
       ctx.moveTo(sx, sy);
       ctx.lineTo(ex, ey);
       ctx.lineCap = "round";
       ctx.stroke();
+      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = color;
     }
 
-    function handleMouseover(e) {
+    function handleMousemove(e) {
       if (!isDrawing) return;
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
       drawLine(startX, startY, endX, endY);
+      socket.emit('draw', {startX, startY, endX, endY, color, lineWidth})
       startX = endX;
       startY = endY;
     }
+
+    socket.on('draw', (data)=>{
+      drawLine(data.startX, data.startY, data.endX, data.endY, data.color, data.lineWidth);
+    })
 
     function handleMousedown(e) {
       isDrawing = true;
@@ -53,12 +62,12 @@ function App() {
       ctx.beginPath();
     }
 
-    canvas.addEventListener("mousemove", handleMouseover);
+    canvas.addEventListener("mousemove", handleMousemove);
     canvas.addEventListener("mousedown", handleMousedown);
     canvas.addEventListener("mouseup", handleMouseup);
 
     return () => {
-      canvas.removeEventListener("mousemove", handleMouseover);
+      canvas.removeEventListener("mousemove", handleMousemove);
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
     };
@@ -79,7 +88,8 @@ function App() {
 
   function addLineWidth(e){
     if (e.target.id === "lineWidth") {
-      ctx.lineWidth = e.target.value;
+      lineWidth = e.target.value;
+      ctx.lineWidth = lineWidth;
     }
   }
 

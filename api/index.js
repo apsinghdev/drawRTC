@@ -19,6 +19,9 @@ app.get('/', (req, res)=>{
 
 io.on('connection', (socket)=>{
     console.log('user connected socket')
+    socket.on('draw', (data)=>{
+        socket.broadcast.emit('draw', data);
+    })
 })
 
 server.listen(PORT, ()=>{
