@@ -4,9 +4,6 @@ import {io} from 'socket.io-client';
 
 const socket = io('http://localhost:8000');
 
-socket.on('connect', (socket)=>{
-  console.log('socket connected on client side');
-})
 function App() {
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
@@ -49,6 +46,8 @@ function App() {
       drawLine(data.startX, data.startY, data.endX, data.endY, data.color, data.lineWidth);
     })
 
+    socket.on('clear', ()=>{clearRect()})
+
     function handleMousedown(e) {
       isDrawing = true;
       startX = e.clientX - canvas.getBoundingClientRect().left;
@@ -70,13 +69,14 @@ function App() {
       canvas.removeEventListener("mousemove", handleMousemove);
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
+      socket.off('draw');
+      socket.off('clear');
+      
     };
   }, []);
 
-  function clearRect(e){
-    if (e.target.id === "clear") {
+  function clearRect(){
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
   }
 
   function addStroke(e){
@@ -111,7 +111,7 @@ function App() {
             onInput={addLineWidth} 
           />
         </div>
-        <button id="clear" onClick={clearRect}>Clear</button>
+        <button id="clear" onClick={()=>socket.emit('clear')}>Clear</button>
       </div>
       <div className="canvas-container">
         <canvas className="canvas" ref={canvasRef}></canvas>

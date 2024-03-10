@@ -22,6 +22,9 @@ io.on('connection', (socket)=>{
     socket.on('draw', (data)=>{
         socket.broadcast.emit('draw', data);
     })
+    socket.on('clear', ()=>{
+        io.emit('clear');
+    })
 })
 
 server.listen(PORT, ()=>{
