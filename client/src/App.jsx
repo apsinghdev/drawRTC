@@ -1,13 +1,13 @@
 import { useEffect, useRef } from "react";
 import "./App.css";
-import {io} from 'socket.io-client';
+import { io } from "socket.io-client";
 
-const socket = io('http://localhost:8000');
+const socket = io("http://localhost:8000");
 
 function App() {
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
-  let color = '#000000'
+  let color = "#000000";
   let ctx;
   let canvas;
   let lineWidth;
@@ -18,7 +18,6 @@ function App() {
     let startX = 0;
     let startY = 0;
     ctx = canvas.getContext("2d");
-    
 
     canvas.width = canvas.getBoundingClientRect().width;
     canvas.height = canvas.getBoundingClientRect().height;
@@ -37,16 +36,25 @@ function App() {
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
       drawLine(startX, startY, endX, endY);
-      socket.emit('draw', {startX, startY, endX, endY, color, lineWidth})
+      socket.emit("draw", { startX, startY, endX, endY, color, lineWidth });
       startX = endX;
       startY = endY;
     }
 
-    socket.on('draw', (data)=>{
-      drawLine(data.startX, data.startY, data.endX, data.endY, data.color, data.lineWidth);
-    })
+    socket.on("draw", (data) => {
+      drawLine(
+        data.startX,
+        data.startY,
+        data.endX,
+        data.endY,
+        data.color,
+        data.lineWidth
+      );
+    });
 
-    socket.on('clear', ()=>{clearRect()})
+    socket.on("clear", () => {
+      clearRect();
+    });
 
     function handleMousedown(e) {
       isDrawing = true;
@@ -69,24 +77,23 @@ function App() {
       canvas.removeEventListener("mousemove", handleMousemove);
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
-      socket.off('draw');
-      socket.off('clear');
-      
+      socket.off("draw");
+      socket.off("clear");
     };
   }, []);
 
-  function clearRect(){
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function clearRect() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
-  function addStroke(e){
-    if(e.target.id === "stroke"){
+  function addStroke(e) {
+    if (e.target.id === "stroke") {
       color = e.target.value;
       ctx.strokeStyle = color;
     }
   }
 
-  function addLineWidth(e){
+  function addLineWidth(e) {
     if (e.target.id === "lineWidth") {
       lineWidth = e.target.value;
       ctx.lineWidth = lineWidth;
@@ -99,7 +106,13 @@ function App() {
         <h1 id="drawRTC">drawRTC</h1>
         <div className="input-container" id="colorpicker">
           <label htmlFor="stroke">Stroke</label>
-          <input id="stroke" name="stroke" type="color" defaultValue={color} onInput={addStroke}/>
+          <input
+            id="stroke"
+            name="stroke"
+            type="color"
+            defaultValue={color}
+            onInput={addStroke}
+          />
         </div>
         <div className="input-container" id="linewidth">
           <label htmlFor="lineWidth">Line Width</label>
@@ -108,10 +121,12 @@ function App() {
             name="lineWidth"
             type="number"
             defaultValue="3"
-            onInput={addLineWidth} 
+            onInput={addLineWidth}
           />
         </div>
-        <button id="clear" onClick={()=>socket.emit('clear')}>Clear</button>
+        <button id="clear" onClick={() => socket.emit("clear")}>
+          Clear
+        </button>
       </div>
       <div className="canvas-container">
         <canvas className="canvas" ref={canvasRef}></canvas>
