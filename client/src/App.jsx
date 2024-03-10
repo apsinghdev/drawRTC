@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { io } from "socket.io-client";
 
@@ -7,12 +7,21 @@ const socket = io("http://localhost:8000");
 function App() {
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
-  let color = "#000000";
+  let color = '#000000'
   let ctx;
   let canvas;
   let lineWidth;
 
-  useEffect(() => {
+  function drawLine(sx, sy, ex, ey, color, lineWidth) {
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(ex, ey);
+    ctx.lineCap = "round";
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+  }
+
+  useEffect(() => { 
     canvas = canvasRef.current;
     let isDrawing = false;
     let startX = 0;
@@ -22,39 +31,15 @@ function App() {
     canvas.width = canvas.getBoundingClientRect().width;
     canvas.height = canvas.getBoundingClientRect().height;
 
-    function drawLine(sx, sy, ex, ey, color, lineWidth) {
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(ex, ey);
-      ctx.lineCap = "round";
-      ctx.stroke();
-      ctx.lineWidth = lineWidth;
-      ctx.strokeStyle = color;
-    }
-
     function handleMousemove(e) {
       if (!isDrawing) return;
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
-      drawLine(startX, startY, endX, endY);
+      drawLine(startX, startY, endX, endY, color );
       socket.emit("draw", { startX, startY, endX, endY, color, lineWidth });
       startX = endX;
       startY = endY;
     }
-
-    socket.on("draw", (data) => {
-      drawLine(
-        data.startX,
-        data.startY,
-        data.endX,
-        data.endY,
-        data.color,
-        data.lineWidth
-      );
-    });
-
-    socket.on("clear", () => {
-      clearRect();
-    });
 
     function handleMousedown(e) {
       isDrawing = true;
@@ -65,7 +50,6 @@ function App() {
       isDrawing = false;
       startX = 0;
       startY = 0;
-      ctx.stroke();
       ctx.beginPath();
     }
 
@@ -77,19 +61,46 @@ function App() {
       canvas.removeEventListener("mousemove", handleMousemove);
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
-      socket.off("draw");
-      socket.off("clear");
     };
+  }, [color]);
+
+  useEffect(() => {
+    socket.on("draw", (data) => {
+      drawLine(
+        data.startX,
+        data.startY,
+        data.endX,
+        data.endY,
+        data.color,
+        data.lineWidth
+      );
+    });
+  
+    socket.on("clear", () => {
+      clearRect();
+    });
+   
+   return () => {
+    socket.off("draw");
+    socket.off("clear");
+   }
   }, []);
 
   function clearRect() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
+  function clearOnClick(){
+    clearRect();
+    socket.emit('clear')
+  }
+
   function addStroke(e) {
     if (e.target.id === "stroke") {
-      color = e.target.value;
-      ctx.strokeStyle = color;
+      const newColor = e.target.value;
+      color = newColor;
+      ctx.strokeStyle = newColor;
+      
     }
   }
 
@@ -109,9 +120,8 @@ function App() {
           <input
             id="stroke"
             name="stroke"
-            type="color"
-            defaultValue={color}
-            onInput={addStroke}
+            type="color"  
+            onChange={addStroke}
           />
         </div>
         <div className="input-container" id="linewidth">
@@ -121,10 +131,10 @@ function App() {
             name="lineWidth"
             type="number"
             defaultValue="3"
-            onInput={addLineWidth}
+            onChange={addLineWidth}
           />
         </div>
-        <button id="clear" onClick={() => socket.emit("clear")}>
+        <button id="clear" onClick={clearOnClick}>
           Clear
         </button>
       </div>
@@ -136,3 +146,4 @@ function App() {
 }
 
 export default App;
+
