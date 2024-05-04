@@ -113,16 +113,15 @@ function App() {
 
   return (
     <div id="container" style={{ display: "flex" }}>
-      <div id="sidebar" ref={sidebarRef}>
+      <div
+        id="sidebar"
+        className="flex flex-col p-1 w-64 bg-gray-900 pl-4"
+        ref={sidebarRef}
+      >
         <h1 id="drawRTC">drawRTC</h1>
         <div className="input-container" id="colorpicker">
           <label htmlFor="stroke">Stroke</label>
-          <input
-            id="stroke"
-            name="stroke"
-            type="color"  
-            onChange={addStroke}
-          />
+          <input id="stroke" name="stroke" type="color" onChange={addStroke} />
         </div>
         <div className="input-container" id="linewidth">
           <label htmlFor="lineWidth">Line Width</label>
