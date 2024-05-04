@@ -46,7 +46,7 @@ function App() {
       startX = e.clientX - canvas.getBoundingClientRect().left;
       startY = e.clientY - canvas.getBoundingClientRect().top;
     }
-    function handleMouseup(e) {
+    function handleMouseup() {
       isDrawing = false;
       startX = 0;
       startY = 0;
