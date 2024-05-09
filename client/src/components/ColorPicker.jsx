@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 function ColorPicker(props){
     return (
-      <div className="flex p-1 items-center justify-around">
+      <div className="flex p-1 items-center justify-around mt-3">
         <h1 className="font-sans text-lg antialiased font-semibold text-white">
           {props.name}
         </h1>
