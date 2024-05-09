@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "./App.css";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:8000");
+
+import Header from "./components/Header";
+import Toolbar from "./components/Toolbar";
 
 function App() {
   const canvasRef = useRef(null);
@@ -113,27 +116,14 @@ function App() {
 
   return (
     <div id="container" style={{ display: "flex" }}>
-      <div id="sidebar" ref={sidebarRef}>
-        <h1 id="drawRTC">drawRTC</h1>
-        <div className="input-container" id="colorpicker">
-          <label htmlFor="stroke">Stroke</label>
-          <input
-            id="stroke"
-            name="stroke"
-            type="color"  
-            onChange={addStroke}
-          />
-        </div>
-        <div className="input-container" id="linewidth">
-          <label htmlFor="lineWidth">Line Width</label>
-          <input
-            id="lineWidth"
-            name="lineWidth"
-            type="number"
-            defaultValue="3"
-            onChange={addLineWidth}
-          />
-        </div>
+      <div
+        id="sidebar"
+        className="flex flex-col w-64 bg-zinc-800"
+        ref={sidebarRef}
+      >
+        <Header></Header>
+        <Toolbar></Toolbar>
+        
         <button id="clear" onClick={clearOnClick}>
           Clear
         </button>
