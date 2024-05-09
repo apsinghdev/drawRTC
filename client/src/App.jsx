@@ -4,6 +4,8 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:8000");
 
+import Header from "./components/Header";
+
 function App() {
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
@@ -115,9 +117,10 @@ function App() {
     <div id="container" style={{ display: "flex" }}>
       <div
         id="sidebar"
-        className="flex flex-col p-1 w-64 bg-gray-900 pl-4"
+        className="flex flex-col w-64 bg-gray-900"
         ref={sidebarRef}
       >
+        <Header></Header>
         <h1 id="drawRTC">drawRTC</h1>
         <div className="input-container" id="colorpicker">
           <label htmlFor="stroke">Stroke</label>

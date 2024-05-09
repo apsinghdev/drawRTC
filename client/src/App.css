@@ -3,11 +3,11 @@
     width: 100vw;
   }
 
-#sidebar * {
+/* #sidebar * {
     margin-bottom: 6px;
-  }
+  } */
   
-  #sidebar h1 {
+  /* #sidebar h1 {
     margin-top: '20px';
     background: #7F7FD5;
     background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
@@ -15,7 +15,7 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
+  } */
   
   #linewidth{
     margin-top: 10px !important; 
