@@ -6,6 +6,7 @@ const socket = io("http://localhost:8000");
 
 import Header from "./components/Header";
 import Toolbar from "./components/Toolbar";
+import Socials from "./components/Socials";
 
 function App() {
   const canvasRef = useRef(null);
@@ -123,7 +124,7 @@ function App() {
       >
         <Header></Header>
         <Toolbar></Toolbar>
-        
+        <Socials></Socials>
         <button id="clear" onClick={clearOnClick}>
           Clear
         </button>
