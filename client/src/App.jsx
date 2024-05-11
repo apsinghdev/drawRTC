@@ -7,6 +7,7 @@ const socket = io("http://localhost:8000");
 import Header from "./components/Header";
 import Toolbar from "./components/Toolbar";
 import Socials from "./components/Socials";
+import LoginAndLogout from "./components/LoginAndLogout";
 
 function App() {
   const canvasRef = useRef(null);
@@ -119,7 +120,7 @@ function App() {
     <div id="container" style={{ display: "flex" }}>
       <div
         id="sidebar"
-        className="flex flex-col w-64 bg-zinc-800"
+        className="flex flex-col w-64 bg-zinc-800 relative"
         ref={sidebarRef}
       >
         <Header></Header>
@@ -128,6 +129,7 @@ function App() {
         <button id="clear" onClick={clearOnClick}>
           Clear
         </button>
+        <LoginAndLogout></LoginAndLogout>
       </div>
       <div className="canvas-container">
         <canvas className="canvas" ref={canvasRef}></canvas>
