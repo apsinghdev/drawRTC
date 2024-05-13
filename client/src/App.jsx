@@ -119,7 +119,7 @@ function App() {
   }
 
   return (
-    <div id="container" style={{ display: "flex" }}>
+    <div id="container">
       <Sidebar
         clearOnClick={clearOnClick}
         ref={sidebarRef}
