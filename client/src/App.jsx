@@ -4,10 +4,6 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:8000");
 
-import Header from "./components/Header";
-import Toolbar from "./components/Toolbar";
-import Socials from "./components/Socials";
-import LoginAndLogout from "./components/LoginAndLogout";
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 
