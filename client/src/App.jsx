@@ -8,6 +8,8 @@ import Header from "./components/Header";
 import Toolbar from "./components/Toolbar";
 import Socials from "./components/Socials";
 import LoginAndLogout from "./components/LoginAndLogout";
+import Sidebar from "./components/Sidebar";
+import Canvas from "./components/Canvas";
 
 function App() {
   const canvasRef = useRef(null);
@@ -117,23 +119,13 @@ function App() {
   }
 
   return (
-    <div id="container" style={{ display: "flex" }}>
-      <div
-        id="sidebar"
-        className="flex flex-col w-64 bg-zinc-800 relative"
+    <div id="container">
+      <Sidebar
+        clearOnClick={clearOnClick}
         ref={sidebarRef}
-      >
-        <Header></Header>
-        <Toolbar></Toolbar>
-        <Socials></Socials>
-        <button id="clear" onClick={clearOnClick}>
-          Clear
-        </button>
-        <LoginAndLogout></LoginAndLogout>
-      </div>
-      <div className="canvas-container">
-        <canvas className="canvas" ref={canvasRef}></canvas>
-      </div>
+        id="clear"
+      ></Sidebar>
+      <Canvas canvasRef={canvasRef}></Canvas>
     </div>
   );
 }

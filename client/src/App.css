@@ -55,20 +55,6 @@
     width: 60%;
     margin-top: 20px;
   }
-  
-  .canvas-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-  }
-  
-  .canvas {
-    height: 100%;
-    width: 86vw;
-    background-color: rgb(212, 212, 13);
-  }
 
 
 
