@@ -6,7 +6,7 @@ import LoginAndLogout from "./LoginAndLogout";
 function Sidebar(props){
     return (
       <div className="flex flex-col w-64 bg-zinc-800 relative" ref={props.ref}>
-        <Header></Header>
+        <Header toggleMenu={props.toggleMenu}></Header>
         <Toolbar clearOnClick={props.clearOnClick} id={props.id}></Toolbar>
         <LoginAndLogout></LoginAndLogout>
       </div>
