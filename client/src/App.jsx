@@ -9,6 +9,7 @@ import Toolbar from "./components/Toolbar";
 import Socials from "./components/Socials";
 import LoginAndLogout from "./components/LoginAndLogout";
 import Sidebar from "./components/Sidebar";
+import Canvas from "./components/Canvas";
 
 function App() {
   const canvasRef = useRef(null);
@@ -119,10 +120,12 @@ function App() {
 
   return (
     <div id="container" style={{ display: "flex" }}>
-      <Sidebar clearOnClick={clearOnClick} ref={sidebarRef} id="clear"></Sidebar>
-      <div className="canvas-container">
-        <canvas className="canvas" ref={canvasRef}></canvas>
-      </div>
+      <Sidebar
+        clearOnClick={clearOnClick}
+        ref={sidebarRef}
+        id="clear"
+      ></Sidebar>
+      <Canvas canvasRef={canvasRef}></Canvas>
     </div>
   );
 }
