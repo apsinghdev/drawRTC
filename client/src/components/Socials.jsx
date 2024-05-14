@@ -15,7 +15,7 @@ function Socials(){
       </h1>
       <img
         src={Xlogo}
-        className="h-6 w-6 rounded cursor-pointer"
+        className="h-5 w-5 rounded cursor-pointer"
         onClick={clickHandler}
       ></img>
     </div>

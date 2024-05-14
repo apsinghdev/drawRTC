@@ -3,7 +3,7 @@ import Socials from "./Socials";
 
 function Menu(){
     return (
-      <div className="w-52 h-56 bg-green-500 absolute left-52 top-8 rounded-lg shadow-xl">
+      <div className="w-52 h-56 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
         <MenuItem feat="Start Collaboration"></MenuItem>
         <MenuItem feat="Start Chat"></MenuItem>
         <MenuItem feat="Save as pdf"></MenuItem>
