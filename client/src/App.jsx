@@ -1,17 +1,21 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:8000");
 
-import Header from "./components/Header";
-import Toolbar from "./components/Toolbar";
-import Socials from "./components/Socials";
-import LoginAndLogout from "./components/LoginAndLogout";
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
+import Menu from "./components/Menu";
 
 function App() {
+
+  const [showMenu, setShowMenu ] = useState(false);
+
+  function toggleMenu(){
+    setShowMenu(!showMenu);
+  }
+
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
   let color = '#000000'
@@ -124,8 +128,10 @@ function App() {
         clearOnClick={clearOnClick}
         ref={sidebarRef}
         id="clear"
+        toggleMenu={toggleMenu}
       ></Sidebar>
       <Canvas canvasRef={canvasRef}></Canvas>
+      { showMenu && <Menu></Menu>}
     </div>
   );
 }
