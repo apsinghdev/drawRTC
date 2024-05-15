@@ -24,6 +24,3 @@ then start the client
 2. `npm run dev`
 3. go to `http://localhost:5173/`
 4. draw and have fun!
-
-
-NOTE: there are few bugs in this that I'll fix in upcoming commits.
