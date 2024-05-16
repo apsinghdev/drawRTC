@@ -8,7 +8,7 @@ function ColorPicker(props){
         <input
           type="color"
           value={props.defaultColor}
-          className="p-1 h-10 w-14 block bg-white border border-gray-800 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700"
+          className="p-1 h-10 w-10 block bg-white border border-gray-800 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700"
         ></input>
       </div>
     );

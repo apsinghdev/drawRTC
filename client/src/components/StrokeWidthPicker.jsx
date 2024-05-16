@@ -8,7 +8,7 @@ function StrokeWidthPicker(){
           type="number"
           placeholder="2"
           defaultValue={2}
-          className="w-12 p-1 h-7 block border border-gray-800 cursor-pointer rounded-md"
+          className="w-12 p-1 h-8 block border border-gray-800 cursor-pointer rounded-md"
         ></input>
       </div>
     );
