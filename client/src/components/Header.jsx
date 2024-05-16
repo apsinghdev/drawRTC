@@ -7,8 +7,8 @@ function Header(props) {
       <h1 className="font-sans text-2xl antialiased font-extrabold text-white">
         drawRTC
       </h1>
-      <div className="" id="options">
-        <FaBars size={25} onClick={props.toggleMenu}/>
+      <div className="cursor-pointer" id="options">
+        <FaBars size={25} onClick={props.toggleMenu} />
       </div>
     </div>
   );
