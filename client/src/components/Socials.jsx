@@ -6,7 +6,7 @@ function Socials(){
       window.open(link, "_blank");
   }
   return (
-    <div className="flex items-center justify-center mt-3">
+    <div className="flex items-center justify-center my-3">
       <h1 className="text-white mr-2 cursor-pointer font-sans" onClick={clickHandler}>
         Built By{" "}
         <span className="font-mono text-emerald-300 hover:lowercase">
