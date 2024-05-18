@@ -125,6 +125,7 @@ function App() {
   return (
     <div id="container">
       <Sidebar
+        addLineWidth={addLineWidth}
         clearOnClick={clearOnClick}
         ref={sidebarRef}
         id="clear"

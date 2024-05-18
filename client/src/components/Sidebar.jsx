@@ -10,7 +10,11 @@ function Sidebar(props){
         ref={props.ref}
       >
         <Header toggleMenu={props.toggleMenu}></Header>
-        <Toolbar clearOnClick={props.clearOnClick} id={props.id}></Toolbar>
+        <Toolbar
+          clearOnClick={props.clearOnClick}
+          id={props.id}
+          addLineWidth={props.addLineWidth}
+        ></Toolbar>
         <LoginAndLogout></LoginAndLogout>
       </div>
     );
