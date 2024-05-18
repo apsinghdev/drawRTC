@@ -10,7 +10,7 @@ function Toolbar(props){
         <ColorPicker name="Colors :" defaultColor="#000000"></ColorPicker>
         <ColorPicker name="Canvas :" defaultColor="#FFFFFF"></ColorPicker>
         <Eraser></Eraser>
-        <StrokeWidthPicker></StrokeWidthPicker>
+        <StrokeWidthPicker addLineWidth={props.addLineWidth} ></StrokeWidthPicker>
         <ClearBtn clearOnClick={props.clearOnClick} id={props.id}></ClearBtn>
       </div>
     );
