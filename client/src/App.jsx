@@ -107,7 +107,7 @@ function App() {
   }
 
   function addStroke(e) {
-    if (e.target.id === "stroke") {
+    if (e.target.id === "penColor") {
       const newColor = e.target.value;
       color = newColor;
       ctx.strokeStyle = newColor;
@@ -125,6 +125,8 @@ function App() {
   return (
     <div id="container">
       <Sidebar
+        addStroke={addStroke}
+
         addLineWidth={addLineWidth}
         clearOnClick={clearOnClick}
         ref={sidebarRef}
@@ -132,7 +134,7 @@ function App() {
         toggleMenu={toggleMenu}
       ></Sidebar>
       <Canvas canvasRef={canvasRef}></Canvas>
-      { showMenu && <Menu></Menu>}
+      {showMenu && <Menu></Menu>}
     </div>
   );
 }
