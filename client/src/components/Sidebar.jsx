@@ -14,6 +14,7 @@ function Sidebar(props){
           clearOnClick={props.clearOnClick}
           id={props.id}
           addLineWidth={props.addLineWidth}
+          addStroke={props.addStroke}
         ></Toolbar>
         <LoginAndLogout></LoginAndLogout>
       </div>

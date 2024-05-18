@@ -6,7 +6,9 @@ function PenColor(props) {
         {props.name}
       </h1>
       <input
+        id="penColor"
         type="color"
+        onChange={props.addStroke}
         value={props.defaultColor}
         className="p-1 h-10 w-10 block bg-white border border-gray-800 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700"
       ></input>

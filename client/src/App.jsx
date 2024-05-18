@@ -107,7 +107,7 @@ function App() {
   }
 
   function addStroke(e) {
-    if (e.target.id === "stroke") {
+    if (e.target.id === "penColor") {
       const newColor = e.target.value;
       color = newColor;
       ctx.strokeStyle = newColor;
@@ -126,6 +126,7 @@ function App() {
     <div id="container">
       <Sidebar
         addStroke={addStroke}
+
         addLineWidth={addLineWidth}
         clearOnClick={clearOnClick}
         ref={sidebarRef}
