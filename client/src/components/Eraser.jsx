@@ -1,9 +1,11 @@
 import eraserImg from "../assets/eraser.png";
+import { useState } from "react";
 
 function Eraser(){
+const [ eraserMode, setEraserMode ] = useState(false);
 
   function clickHandler(){
-
+    setEraserMode(!eraserMode);
   }
 
     return (
