@@ -7,6 +7,7 @@ const socket = io("http://localhost:8000");
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
+import EraserCursor from "./components/EraserCursor";
 
 function App() {
 
@@ -135,6 +136,7 @@ function App() {
       ></Sidebar>
       <Canvas canvasRef={canvasRef}></Canvas>
       {showMenu && <Menu></Menu>}
+      <EraserCursor></EraserCursor>
     </div>
   );
 }
