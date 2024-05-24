@@ -1,8 +1,9 @@
 import eraserImg from "../assets/eraser.png";
-import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { eraserState } from "../atoms";
 
 function Eraser(){
-const [ eraserMode, setEraserMode ] = useState(false);
+const [ eraserMode, setEraserMode ] = useRecoilState(eraserState);
 
   function clickHandler(){
     setEraserMode(!eraserMode);

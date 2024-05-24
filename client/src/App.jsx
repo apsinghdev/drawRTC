@@ -8,10 +8,13 @@ import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
+import { useRecoilValue } from "recoil";
+import { eraserState } from "./atoms";
 
 function App() {
 
   const [showMenu, setShowMenu ] = useState(false);
+  const eraserMode = useRecoilValue(eraserState);
 
   function toggleMenu(){
     setShowMenu(!showMenu);
@@ -136,7 +139,7 @@ function App() {
       ></Sidebar>
       <Canvas canvasRef={canvasRef}></Canvas>
       {showMenu && <Menu></Menu>}
-      <EraserCursor></EraserCursor>
+      {eraserMode && <EraserCursor></EraserCursor>}
     </div>
   );
 }
