@@ -8,13 +8,14 @@ import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
-import { useRecoilValue } from "recoil";
-import { eraserState } from "./atoms";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { eraserState, cursorPosition } from "./atoms";
 
 function App() {
 
   const [showMenu, setShowMenu ] = useState(false);
   const eraserMode = useRecoilValue(eraserState);
+  const [position, setPosition] = useRecoilState(cursorPosition);
 
   function toggleMenu(){
     setShowMenu(!showMenu);
@@ -36,21 +37,27 @@ function App() {
     ctx.stroke();
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     canvas = canvasRef.current;
     let isDrawing = false;
     let startX = 0;
     let startY = 0;
-    ctx = canvas.getContext("2d");
 
+    ctx = canvas.getContext("2d");
     canvas.width = canvas.getBoundingClientRect().width;
     canvas.height = canvas.getBoundingClientRect().height;
 
     function handleMousemove(e) {
+
+      // if eraseMode is set the position of the eraser cursor
+      if (eraserMode) {
+        setPosition(() => ({ x: e.clientX, y: e.clientY }));
+      }
+
       if (!isDrawing) return;
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
-      drawLine(startX, startY, endX, endY, color );
+      drawLine(startX, startY, endX, endY, color);
       socket.emit("draw", { startX, startY, endX, endY, color, lineWidth });
       startX = endX;
       startY = endY;
@@ -77,7 +84,7 @@ function App() {
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
     };
-  }, [color]);
+  }, [color, eraserMode, position]);
 
   useEffect(() => {
     socket.on("draw", (data) => {
@@ -130,7 +137,6 @@ function App() {
     <div id="container">
       <Sidebar
         addStroke={addStroke}
-
         addLineWidth={addLineWidth}
         clearOnClick={clearOnClick}
         ref={sidebarRef}
@@ -138,8 +144,8 @@ function App() {
         toggleMenu={toggleMenu}
       ></Sidebar>
       <Canvas canvasRef={canvasRef}></Canvas>
-      {showMenu && <Menu></Menu>}
       {eraserMode && <EraserCursor></EraserCursor>}
+      {showMenu && <Menu></Menu>}
     </div>
   );
 }
