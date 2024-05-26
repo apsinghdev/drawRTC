@@ -10,7 +10,7 @@ import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { eraserState, cursorPosition } from "./atoms";
+import { eraserState, cursorPosition, canvasColors } from "./atoms";
 
 function App() {
   const [showMenu, setShowMenu] = useState(false);
@@ -21,6 +21,7 @@ function App() {
   const [startY, setStartY] = useState(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [penColor, setPenColor] = useState("#000000");
+  const canvasColor = useRecoilValue(canvasColors);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -34,8 +35,8 @@ function App() {
     ctx.moveTo(sx, sy);
     ctx.lineTo(ex, ey);
     ctx.lineCap = "round";
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = penColor;
+    ctx.lineWidth = eraserMode ? 40 : lineWidth;
+    ctx.strokeStyle = eraserMode ? canvasColor : penColor;
     ctx.stroke();
   }
 
