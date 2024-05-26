@@ -2,7 +2,7 @@
 
 A real-time collaboration project to draw with your friends.
 
-![](/home/ajeet/projects/drawRTC/drawRTC.png)
+![](./drawRTC.png)
 
 
 ## Instructions
