@@ -13,8 +13,7 @@ import { useRecoilValue, useRecoilState } from "recoil";
 import { eraserState, cursorPosition } from "./atoms";
 
 function App() {
-
-  const [showMenu, setShowMenu ] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const eraserMode = useRecoilValue(eraserState);
   const [position, setPosition] = useRecoilState(cursorPosition);
   const [ctx, setCtx] = useState(null);
@@ -23,14 +22,14 @@ function App() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penColor, setPenColor] = useState("#000000");
 
-  function toggleMenu(){
+  function toggleMenu() {
     setShowMenu(!showMenu);
   }
 
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
   let lineWidth;
-  
+
   function drawLine(sx, sy, ex, ey, penColor, lineWidth) {
     ctx.moveTo(sx, sy);
     ctx.lineTo(ex, ey);
@@ -39,10 +38,10 @@ function App() {
     ctx.strokeStyle = penColor;
     ctx.stroke();
   }
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
-    if(canvas){
+    if (canvas) {
       const context = canvas.getContext("2d");
       canvas.width = canvas.getBoundingClientRect().width;
       canvas.height = canvas.getBoundingClientRect().height;
@@ -51,7 +50,7 @@ function App() {
   }, [canvasRef.current]);
 
   useEffect(() => {
-    if(!ctx) return;
+    if (!ctx) return;
     const canvas = canvasRef.current;
     function handleMousemove(e) {
       // if eraseMode is set the position of the eraser cursor
@@ -66,7 +65,6 @@ function App() {
       socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth });
       setStartX(endX);
       setStartY(endY);
-
     }
 
     function handleMousedown(e) {
@@ -105,43 +103,42 @@ function App() {
         data.lineWidth
       );
     });
-  
+
     socket.on("clear", () => {
       clearRect();
     });
-   
-   return () => {
-    socket.off("draw");
-    socket.off("clear");
-   }
+
+    return () => {
+      socket.off("draw");
+      socket.off("clear");
+    };
   }, [socket, ctx]);
 
   function clearRect() {
-    if(ctx){
+    if (ctx) {
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     }
   }
 
-  function clearOnClick(){
+  function clearOnClick() {
     clearRect();
-    socket.emit('clear')
+    socket.emit("clear");
   }
 
   function addStroke(e) {
     if (e.target.id === "penColor") {
       const newColor = e.target.value;
       setPenColor(newColor);
-      if(ctx){
+      if (ctx) {
         ctx.strokeStyle = newColor;
       }
-      
     }
   }
 
   function addLineWidth(e) {
     if (e.target.id === "lineWidth") {
       lineWidth = e.target.value;
-      if(ctx){
+      if (ctx) {
         ctx.lineWidth = lineWidth;
       }
     }
@@ -165,4 +162,3 @@ function App() {
 }
 
 export default App;
-
