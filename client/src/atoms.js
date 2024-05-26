@@ -9,3 +9,8 @@ export const cursorPosition = atom({
     key: "cursor-position",
     default: {x: 0, y: 0}
 })
+
+export const canvasColors = atom({
+  key: "canvasColor",
+  default: "#D2B55B",
+});
