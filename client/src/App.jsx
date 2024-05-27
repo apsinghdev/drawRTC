@@ -10,7 +10,7 @@ import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { eraserState, cursorPosition, canvasColors } from "./atoms";
+import { eraserState, cursorPosition, canvasColors, canvasState } from "./atoms";
 
 function App() {
   const [showMenu, setShowMenu] = useState(false);
@@ -22,6 +22,7 @@ function App() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penColor, setPenColor] = useState("#000000");
   const canvasColor = useRecoilValue(canvasColors);
+  const [currentCanvas, setCanvas] = useRecoilState(canvasState); 
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -41,7 +42,8 @@ function App() {
   }
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    setCanvas(canvasRef.current);
+    const canvas = currentCanvas;
     if (canvas) {
       const context = canvas.getContext("2d");
       canvas.width = canvas.getBoundingClientRect().width;
@@ -52,7 +54,8 @@ function App() {
 
   useEffect(() => {
     if (!ctx) return;
-    const canvas = canvasRef.current;
+    setCanvas(canvasRef.current);
+    const canvas = currentCanvas;
     function handleMousemove(e) {
       // if eraseMode is set the position of the eraser cursor
       if (eraserMode) {

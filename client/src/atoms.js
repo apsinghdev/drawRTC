@@ -14,3 +14,8 @@ export const canvasColors = atom({
   key: "canvasColor",
   default: "#D2B55B",
 });
+
+export const canvasState = atom({
+  key: 'canvasState',
+  default: ''
+})
