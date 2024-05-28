@@ -7,10 +7,15 @@ A real-time collaboration project to draw with your friends.
 
 ## Demo
 
-<iframe width="560" height="315"
-src="https://youtu.be/74T8SncLnE8?si=UW4dB4Rs7_qqL6nn?&autoplay=1"frameborder="0"
-allowfullscreen></iframe>
-
+<iframe
+  width="640"
+  height="480"
+  src="https://youtu.be/74T8SncLnE8?si=UW4dB4Rs7_qqL6nn"
+  frameborder="0"
+  allow="autoplay; encrypted-media"
+  allowfullscreen
+>
+</iframe>
 
 ## Instructions
 
