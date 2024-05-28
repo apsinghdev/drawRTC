@@ -3,19 +3,10 @@
 A real-time collaboration project to draw with your friends.
 
 ![](./drawRTC.png)
-![](./demo.mp4)
 
 ## Demo
 
-<iframe
-  width="640"
-  height="480"
-  src="https://youtu.be/74T8SncLnE8?si=UW4dB4Rs7_qqL6nn"
-  frameborder="0"
-  allow="autoplay; encrypted-media"
-  allowfullscreen
->
-</iframe>
+[![Watch the video](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://youtu.be/74T8SncLnE8?si=T-uwfenkqrkfhn9q)
 
 ## Instructions
 
