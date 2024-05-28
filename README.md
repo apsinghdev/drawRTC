@@ -6,7 +6,7 @@ A real-time collaboration project to draw with your friends.
 
 <video width="600" controls autoplay>
   <source src="./demo.mp4" type="video/mp4">
-  <!-- Your browser does not support the video tag. -->
+  Your browser does not support the video tag.
 </video>
 
 
