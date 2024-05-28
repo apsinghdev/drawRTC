@@ -7,7 +7,7 @@ A real-time collaboration project to draw with your friends.
 
 ## Demo
 
-[![Demo video](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2F74T8SncLnE8%3Fsi%3DUW4dB4Rs7_qqL6nn)](https://youtu.be/74T8SncLnE8?si=UW4dB4Rs7_qqL6nn)
+https://youtu.be/74T8SncLnE8?si=UW4dB4Rs7_qqL6nn
 
 
 ## Instructions
