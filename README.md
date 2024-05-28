@@ -3,7 +3,7 @@
 A real-time collaboration project to draw with your friends.
 
 ![](./drawRTC.png)
-
+![](./demo.mp4)
 
 ## Demo
 
