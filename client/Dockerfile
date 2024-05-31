@@ -11,8 +11,9 @@ COPY . .
 RUN npm run build
 
 FROM nginx:alpine
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
 
-EXPOSE 5173
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 
-CMD ["npm", "run", "dev"]
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
