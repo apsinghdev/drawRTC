@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile  
     image: rtc-client:1.1 
     ports:
-      - "5173:80"
+      - "5173:5173"
     volumes:
       - ./client:/usr/src/app 
     networks:
