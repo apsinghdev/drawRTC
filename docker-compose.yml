@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./api 
+      dockerfile: Dockerfile  
+    image: rtc-api:1.0  
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/usr/src/app  
+    networks:
+      - my-network  
+
+  frontend:
+    build:
+      context: ./client 
+      dockerfile: Dockerfile  
+    image: rtc-client:1.1 
+    ports:
+      - "5173:80"
+    volumes:
+      - ./client:/usr/src/app 
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
