@@ -13,6 +13,15 @@ A real-time collaboration project to draw with your friends.
 
 ### Set Up the Project Locally
 
+#### If you are cool like me, then set up using docker
+
+1. Run `docker-compose build` in the root directory of the project
+2. Once build is successful, run `docker-compose up -d`
+3. Now your frontend would be running on `localhost:5173` and backend on `localhost:8000`
+4. Enjoy drawing !
+
+#### Set Up manually
+
 1. cd into the api folder `cd api`
 2. install dependencies `npm install`
 3. then cd into the client `cd client`
