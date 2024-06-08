@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { io } from "socket.io-client";
+import * as Y from "yjs";
+import { SocketIOProvider } from "y-socket.io";
 
 const socket = io("http://localhost:8000");
 
@@ -22,7 +24,45 @@ function App() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penColor, setPenColor] = useState("#000000");
   const canvasColor = useRecoilValue(canvasColors);
-  const [currentCanvas, setCanvas] = useRecoilState(canvasState); 
+  const [currentCanvas, setCanvas] = useRecoilState(canvasState);
+  const [doc, setDoc] = useState(null);
+  const [provider, setProvider] = useState(null);
+  const [text, setText] = useState('');
+
+  useEffect(() => {
+    if (!doc) {
+      console.log("setting doc");
+      const _doc = Y.Doc();
+      setDoc(_doc);
+    }
+  }, [doc]);
+
+  useEffect(() => {
+    if (!!doc && !provider) {
+      console.log("setting provider");
+      const socketioprovider = new SocketIOProvider(
+        "ws://localhost:8000",
+        "text-editor",
+        doc,
+        { autoConnect: true }
+      );
+      setProvider(socketioprovider);
+      socketioprovider.connect();
+    }
+  }, [doc, provider]);
+
+  useEffect(() => {
+    if (provider) {
+      const yText = doc.getText("text");
+      const observer = () => {
+        setText(yText.toString());
+      };
+      yText.observe(observer);
+      return () => {
+        yText.unobserve(observer);
+      };
+    }
+  }, [provider]);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
