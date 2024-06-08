@@ -3,6 +3,7 @@ import express from "express";
 import {Server} from "socket.io";
 import {createServer} from "http";
 import cors from 'cors';
+import {ySocketIO} from 'y-socket.io';
 
 const app = express();
 const server = createServer(app);
@@ -10,6 +11,10 @@ const io = new Server(server, {
     cors: {origin: '*'}
 });
 const PORT = 8000;
+
+const ysocketio = new ySocketIO(io, {});
+
+ysocketio.initialize();
 
 app.use(cors({origin: '*'}))
 
