@@ -11,6 +11,7 @@ import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
+import TextEditor from "./components/TextEditor";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { eraserState, cursorPosition, canvasColors, canvasState } from "./atoms";
 
@@ -32,7 +33,7 @@ function App() {
   useEffect(() => {
     if (!doc) {
       console.log("setting doc");
-      const _doc = Y.Doc();
+      const _doc = new Y.Doc();
       setDoc(_doc);
     }
   }, [doc]);
@@ -201,6 +202,7 @@ function App() {
       <Canvas canvasRef={canvasRef}></Canvas>
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
+      <TextEditor></TextEditor>
     </div>
   );
 }
