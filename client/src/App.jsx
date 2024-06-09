@@ -13,10 +13,10 @@ import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import TextEditor from "./components/TextEditor";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { eraserState, cursorPosition, canvasColors, canvasState } from "./atoms";
+import { eraserState, cursorPosition, canvasColors, canvasState, showMenuState, showTextEditor } from "./atoms";
 
 function App() {
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useRecoilState(showMenuState);
   const eraserMode = useRecoilValue(eraserState);
   const [position, setPosition] = useRecoilState(cursorPosition);
   const [ctx, setCtx] = useState(null);
@@ -29,6 +29,7 @@ function App() {
   const [doc, setDoc] = useState(null);
   const [provider, setProvider] = useState(null);
   const [text, setText] = useState('');
+  const textEditor = useRecoilValue(showTextEditor);
 
   useEffect(() => {
     if (!doc) {
@@ -202,7 +203,7 @@ function App() {
       <Canvas canvasRef={canvasRef}></Canvas>
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
-      <TextEditor></TextEditor>
+      {textEditor && <TextEditor></TextEditor>}
     </div>
   );
 }
