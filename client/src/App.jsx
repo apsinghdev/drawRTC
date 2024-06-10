@@ -13,7 +13,16 @@ import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import TextEditor from "./components/TextEditor";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { eraserState, cursorPosition, canvasColors, canvasState, showMenuState, showTextEditor } from "./atoms";
+import {
+  eraserState,
+  cursorPosition,
+  canvasColors,
+  canvasState,
+  showMenuState,
+  showTextEditor,
+  docState,
+  textState,
+} from "./atoms";
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
@@ -26,9 +35,9 @@ function App() {
   const [penColor, setPenColor] = useState("#000000");
   const canvasColor = useRecoilValue(canvasColors);
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
-  const [doc, setDoc] = useState(null);
+  const [doc, setDoc] = useRecoilState(docState);
   const [provider, setProvider] = useState(null);
-  const [text, setText] = useState('');
+  const [text, setText] = useRecoilState(textState);
   const textEditor = useRecoilValue(showTextEditor);
 
   useEffect(() => {
@@ -40,7 +49,7 @@ function App() {
   }, [doc]);
 
   useEffect(() => {
-    if (!!doc && !provider) {
+    if (doc && !provider) {
       console.log("setting provider");
       const socketioprovider = new SocketIOProvider(
         "ws://localhost:8000",
@@ -64,7 +73,7 @@ function App() {
         yText.unobserve(observer);
       };
     }
-  }, [provider]);
+  }, [provider, doc]);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -204,6 +213,7 @@ function App() {
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
       {textEditor && <TextEditor></TextEditor>}
+      {console.log(text)}
     </div>
   );
 }

@@ -29,3 +29,13 @@ export const showTextEditor = atom({
   key: "showTextEditor",
   default: false
 })
+
+export const docState = atom({
+  key: "docState",
+  default: null
+})
+
+export const textState = atom({
+  key: "textState",
+  default: null
+})
