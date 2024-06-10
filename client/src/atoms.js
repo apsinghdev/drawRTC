@@ -19,3 +19,23 @@ export const canvasState = atom({
   key: 'canvasState',
   default: ''
 })
+
+export const showMenuState = atom({
+  key: "showMenu",
+  default: false
+})
+
+export const showTextEditor = atom({
+  key: "showTextEditor",
+  default: false
+})
+
+export const docState = atom({
+  key: "docState",
+  default: null
+})
+
+export const textState = atom({
+  key: "textState",
+  default: null
+})
