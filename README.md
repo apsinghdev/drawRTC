@@ -41,4 +41,4 @@ then start the client
 3. go to `http://localhost:5173/`
 4. draw and have fun!
 
-Crafted by [Ajeet](https://x.com/ajeetonx)
+Crafted by [Ajeet](https://x.com/ajeetonx) pratap
