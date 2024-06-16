@@ -22,6 +22,10 @@ app.get('/', (req, res)=>{
     console.log('running')
 })
 
+app.get('/test', (req, res) => {
+    res.send(JSON.stringify({ok: true}));
+})
+
 io.on('connection', (socket)=>{
     console.log('user connected socket')
     socket.on('draw', (data)=>{
