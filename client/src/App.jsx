@@ -12,7 +12,7 @@ import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import TextEditor from "./components/TextEditor";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import {
   eraserState,
   cursorPosition,
@@ -21,7 +21,7 @@ import {
   showMenuState,
   showTextEditor,
   docState,
-  textState,
+  textEditorInput
 } from "./atoms";
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
   const [doc, setDoc] = useRecoilState(docState);
   const [provider, setProvider] = useState(null);
-  const [text, setText] = useRecoilState(textState);
+  const setTextEditorInput = useSetRecoilState(textEditorInput);
   const textEditor = useRecoilValue(showTextEditor);
 
   useEffect(() => {
@@ -47,6 +47,19 @@ function App() {
       setDoc(_doc);
     }
   }, [doc]);
+  
+  useEffect(() => {
+    if (provider) {
+      const yText = doc.getText("text");
+      const observer = () => {
+        setTextEditorInput(yText.toString());
+      };
+      yText.observe(observer);
+      return () => {
+        yText.unobserve(observer);
+      };
+    }
+  }, [provider, doc]);
 
   useEffect(() => {
     if (doc && !provider) {
@@ -62,18 +75,6 @@ function App() {
     }
   }, [doc, provider]);
 
-  useEffect(() => {
-    if (provider) {
-      const yText = doc.getText("text");
-      const observer = () => {
-        setText(yText.toString());
-      };
-      yText.observe(observer);
-      return () => {
-        yText.unobserve(observer);
-      };
-    }
-  }, [provider, doc]);
 
   function toggleMenu() {
     setShowMenu(!showMenu);

@@ -35,10 +35,6 @@ export const docState = atom({
   default: null
 })
 
-export const textState = atom({
-  key: "textState",
-  default: null
-})
 
 export const textEditorInput = atom({
   key: "textEditorInput",
