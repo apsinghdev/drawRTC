@@ -39,3 +39,8 @@ export const textState = atom({
   key: "textState",
   default: null
 })
+
+export const textEditorInput = atom({
+  key: "textEditorInput",
+  default: ''
+})

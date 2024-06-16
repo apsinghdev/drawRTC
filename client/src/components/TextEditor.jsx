@@ -1,18 +1,21 @@
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import { showTextEditor, docState, textState } from "../atoms";
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { showTextEditor, docState, textState, textEditorInput } from "../atoms";
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
   const doc = useRecoilValue(docState);
   const text = useRecoilValue(textState);
+  const [input, setInput] =  useRecoilState(textEditorInput)
 
   function removeTextEditor() {
     setTextEditorFalse(false);
   }
 
   function handleChange(event) {
-    const newText = event.target.value;
-    const yText = doc.getText('text');
+    setInput(event.target.value);
+    if(!doc) return;
+    const newText = input;
+    const yText = doc.getText("text");
     yText.delete(0, yText.length);
     yText.insert(0, newText);
   }
