@@ -214,7 +214,6 @@ function App() {
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
       {textEditor && <TextEditor></TextEditor>}
-      {console.log(text)}
     </div>
   );
 }

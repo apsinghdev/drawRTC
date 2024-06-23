@@ -1,10 +1,10 @@
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { showTextEditor, docState, textState, textEditorInput } from "../atoms";
+import { showTextEditor, docState, textEditorInput } from "../atoms";
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
   const doc = useRecoilValue(docState);
-  const text = useRecoilValue(textState);
+  const text = useRecoilValue(textEditorInput);
   const [input, setInput] =  useRecoilState(textEditorInput)
 
   function removeTextEditor() {
