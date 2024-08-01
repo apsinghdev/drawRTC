@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { io } from "socket.io-client";
 import * as Y from "yjs";
 import { SocketIOProvider } from "y-socket.io";
-
-const socket = io("http://localhost:8000");
+import socket from "./Socket";
 
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
