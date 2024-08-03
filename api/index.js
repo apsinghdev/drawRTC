@@ -26,12 +26,12 @@ app.get('/test', (req, res) => {
     res.send(JSON.stringify({ok: true}));
 })
 
-io.on('connection', (socket)=>{
+io.on('connection', (socket) => {
     console.log('user connected socket')
     socket.on('draw', (data)=>{
         socket.broadcast.emit('draw', data);
     })
-    socket.on('clear', ()=>{
+    socket.on('clear', () => {
         io.emit('clear');
     })
 })

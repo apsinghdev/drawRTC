@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import * as Y from "yjs";
 import { SocketIOProvider } from "y-socket.io";
-import socket from "./Socket";
+import socket from "./socket";
 
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
@@ -21,6 +21,8 @@ import {
   docState,
   textEditorInput
 } from "./atoms";
+
+socket.connect();
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
