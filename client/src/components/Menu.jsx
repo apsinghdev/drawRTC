@@ -69,9 +69,8 @@ function Menu(){
   }, [])
   
   useEffect(() => {
-    // PRB: socket is listening but the function is not getting executed
     socket.on("open-text-editor", (data) => {
-      handleOpenTextEditor(true); // PRB: infinite loop taking place
+      handleOpenTextEditor(true);
     });
   
     return () => {

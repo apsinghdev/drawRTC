@@ -39,6 +39,10 @@ io.on('connection', (socket) => {
     socket.on('open-text-editor', data => {
         socket.broadcast.emit("open-text-editor", data);
     })
+
+    socket.on('close-text-editor', data => {
+        socket.broadcast.emit("close-text-editor", data);
+    })
 })
 
 server.listen(PORT, ()=>{

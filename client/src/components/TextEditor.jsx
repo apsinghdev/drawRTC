@@ -1,15 +1,36 @@
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { showTextEditor, docState, textEditorInput } from "../atoms";
+import socket from "../socket";
+import { useCallback, useEffect, useRef } from "react";
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
   const doc = useRecoilValue(docState);
   const text = useRecoilValue(textEditorInput);
   const [input, setInput] =  useRecoilState(textEditorInput)
+  const isRendering = useRef(false);
 
   function removeTextEditor() {
+    if (!isRendering.current) {
+      socket.emit("close-text-editor");
+    }
     setTextEditorFalse(false);
   }
+
+  const handleRemoveTextEditor = useCallback((rendering) => {
+    isRendering.current = rendering;
+    removeTextEditor();
+  }, []);
+
+  useEffect(() => {
+    socket.on("close-text-editor", () => {
+      handleRemoveTextEditor(true);
+    });
+
+    return () => {
+      socket.off("close-text-editor", handleRemoveTextEditor);
+    };
+  }, []);
 
   function handleChange(event) {
     setInput(event.target.value);
