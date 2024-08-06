@@ -31,8 +31,13 @@ io.on('connection', (socket) => {
     socket.on('draw', (data)=>{
         socket.broadcast.emit('draw', data);
     })
+
     socket.on('clear', () => {
         io.emit('clear');
+    })
+
+    socket.on('open-text-editor', data => {
+        socket.broadcast.emit("open-text-editor", data);
     })
 })
 
