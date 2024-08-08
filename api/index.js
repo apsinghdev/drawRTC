@@ -43,6 +43,10 @@ io.on('connection', (socket) => {
     socket.on('close-text-editor', data => {
         socket.broadcast.emit("close-text-editor", data);
     })
+    
+    socket.on("text-updated", (data) => {
+      socket.broadcast.emit("text-updated", data);
+    });
 })
 
 server.listen(PORT, ()=>{

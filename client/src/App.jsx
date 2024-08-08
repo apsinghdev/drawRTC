@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import * as Y from "yjs";
-import { SocketIOProvider } from "y-socket.io";
 import socket from "./socket";
 
 import Sidebar from "./components/Sidebar";
@@ -18,7 +16,6 @@ import {
   canvasState,
   showMenuState,
   showTextEditor,
-  docState,
   textEditorInput
 } from "./atoms";
 
@@ -35,45 +32,8 @@ function App() {
   const [penColor, setPenColor] = useState("#000000");
   const canvasColor = useRecoilValue(canvasColors);
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
-  const [doc, setDoc] = useRecoilState(docState);
-  const [provider, setProvider] = useState(null);
   const setTextEditorInput = useSetRecoilState(textEditorInput);
   const textEditor = useRecoilValue(showTextEditor);
-
-  useEffect(() => {
-    if (!doc) {
-      console.log("setting doc");
-      const _doc = new Y.Doc();
-      setDoc(_doc);
-    }
-  }, [doc]);
-  
-  useEffect(() => {
-    if (provider) {
-      const yText = doc.getText("text");
-      const observer = () => {
-        setTextEditorInput(yText.toString());
-      };
-      yText.observe(observer);
-      return () => {
-        yText.unobserve(observer);
-      };
-    }
-  }, [provider, doc]);
-
-  useEffect(() => {
-    if (doc && !provider) {
-      console.log("setting provider");
-      const socketioprovider = new SocketIOProvider(
-        "ws://localhost:8000",
-        "text-editor",
-        doc,
-        { autoConnect: true }
-      );
-      setProvider(socketioprovider);
-      socketioprovider.connect();
-    }
-  }, [doc, provider]);
 
 
   function toggleMenu() {

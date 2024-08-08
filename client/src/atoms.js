@@ -30,11 +30,6 @@ export const showTextEditor = atom({
   default: false
 })
 
-export const docState = atom({
-  key: "docState",
-  default: null
-})
-
 
 export const textEditorInput = atom({
   key: "textEditorInput",

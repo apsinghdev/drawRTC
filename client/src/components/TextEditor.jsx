@@ -1,20 +1,19 @@
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { showTextEditor, docState, textEditorInput } from "../atoms";
+import { showTextEditor, textEditorInput } from "../atoms";
 import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
-  const doc = useRecoilValue(docState);
-  const text = useRecoilValue(textEditorInput);
+  // const text = useRecoilValue(textEditorInput);
   const [input, setInput] =  useRecoilState(textEditorInput)
   const isRendering = useRef(false);
 
   function removeTextEditor() {
+    setTextEditorFalse(false);
     if (!isRendering.current) {
       socket.emit("close-text-editor");
     }
-    setTextEditorFalse(false);
   }
 
   const handleRemoveTextEditor = useCallback((rendering) => {
@@ -22,9 +21,17 @@ function TextEditor() {
     removeTextEditor();
   }, []);
 
+  const handleTextEditorUpdate = useCallback((data) => {
+    setInput(data);
+  }, []);
+
   useEffect(() => {
     socket.on("close-text-editor", () => {
       handleRemoveTextEditor(true);
+    });
+
+    socket.on("text-updated", data => {
+      handleTextEditorUpdate(data);
     });
 
     return () => {
@@ -33,12 +40,9 @@ function TextEditor() {
   }, []);
 
   function handleChange(event) {
-    setInput(event.target.value);
-    if(!doc) return;
-    const newText = input;
-    const yText = doc.getText("text");
-    yText.delete(0, yText.length);
-    yText.insert(0, newText);
+    const value = event.target.value;
+    setInput(value); // this is asynchronous 
+    socket.emit("text-updated", value);
   }
 
   return (
@@ -58,7 +62,7 @@ function TextEditor() {
         className="w-96 h-80 border rounded absolute focus:outline-none focus:ring-0 focus:border-transparent rounded-b-2xl p-2"
         placeholder="E.g. Make a painting with trees..."
         onChange={handleChange}
-        value={text}
+        value={input}
       ></textarea>
     </div>
   );
