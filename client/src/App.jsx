@@ -1,19 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8000");
+import socket from "./socket";
 
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { eraserState, cursorPosition, canvasColors, canvasState } from "./atoms";
+import TextEditor from "./components/TextEditor";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import {
+  eraserState,
+  cursorPosition,
+  canvasColors,
+  canvasState,
+  showMenuState,
+  showTextEditor,
+  textEditorInput
+} from "./atoms";
+
+socket.connect();
 
 function App() {
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useRecoilState(showMenuState);
   const eraserMode = useRecoilValue(eraserState);
   const [position, setPosition] = useRecoilState(cursorPosition);
   const [ctx, setCtx] = useState(null);
@@ -22,7 +31,10 @@ function App() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penColor, setPenColor] = useState("#000000");
   const canvasColor = useRecoilValue(canvasColors);
-  const [currentCanvas, setCanvas] = useRecoilState(canvasState); 
+  const [currentCanvas, setCanvas] = useRecoilState(canvasState);
+  const setTextEditorInput = useSetRecoilState(textEditorInput);
+  const textEditor = useRecoilValue(showTextEditor);
+
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -161,6 +173,7 @@ function App() {
       <Canvas canvasRef={canvasRef}></Canvas>
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
+      {textEditor && <TextEditor></TextEditor>}
     </div>
   );
 }
