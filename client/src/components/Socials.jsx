@@ -1,5 +1,5 @@
 import Xlogo from "../assets/xlogo.png"
-const link = "https://twitter.com/ajeetonx"; 
+const link = "https://twitter.com/ajeetunc"; 
 
 function Socials(){
   function clickHandler(){
