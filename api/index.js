@@ -18,11 +18,11 @@ ysocketio.initialize();
 
 app.use(cors({origin: '*'}))
 
-app.get('/', (req, res)=>{
+app.get('/', ()=>{
     console.log('running')
 })
 
-app.get('/test', (req, res) => {
+app.get('/test', (res) => {
     res.send(JSON.stringify({ok: true}));
 })
 
