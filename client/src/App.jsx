@@ -8,7 +8,7 @@ import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import TextEditor from "./components/TextEditor";
-import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import {
   eraserState,
   cursorPosition,
@@ -16,7 +16,6 @@ import {
   canvasState,
   showMenuState,
   showTextEditor,
-  textEditorInput
 } from "./atoms";
 
 socket.connect();
@@ -32,7 +31,6 @@ function App() {
   const [penColor, setPenColor] = useState("#000000");
   const canvasColor = useRecoilValue(canvasColors);
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
-  const setTextEditorInput = useSetRecoilState(textEditorInput);
   const textEditor = useRecoilValue(showTextEditor);
 
 

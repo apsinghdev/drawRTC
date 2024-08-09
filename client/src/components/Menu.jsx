@@ -53,20 +53,20 @@ function Menu(){
     document.body.removeChild(link);
   }
 
-  function openTextEditor() {
+  const openTextEditor = useCallback(() => {
     const data = "ajeet";
     if(!isRendering.current){
       socket.emit("open-text-editor", data);
     }
     setTextEditor(true);
     setMenuStateFalse(false);
-  }
+  }, [setMenuStateFalse, setTextEditor])
   
   // Memoize the handler function to keep it stable and pass the ref
   const handleOpenTextEditor = useCallback((rendering) => {
     isRendering.current = rendering;
     openTextEditor();
-  }, [])
+  }, [openTextEditor])
   
   useEffect(() => {
     socket.on("open-text-editor", (data) => {
@@ -76,7 +76,7 @@ function Menu(){
     return () => {
       socket.off("open-text-editor", handleOpenTextEditor);
     };
-  }, []);
+  }, [handleOpenTextEditor]);
 
   return (
     <div className="w-52 h-71 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
