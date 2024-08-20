@@ -81,7 +81,6 @@ function Menu(){
   return (
     <div className="w-52 h-71 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
       <MenuItem feat="Start Collaboration"></MenuItem>
-      <MenuItem feat="Start Chat"></MenuItem>
       <MenuItem feat="Save as pdf" clickHandler={saveAsPdf}></MenuItem>
       <MenuItem feat="Save as png" clickHandler={saveAsPng}></MenuItem>
       <MenuItem feat="Open text editor" clickHandler={openTextEditor}></MenuItem>
