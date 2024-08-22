@@ -18,7 +18,6 @@ import {
   showTextEditor,
 } from "./atoms";
 
-socket.connect();
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
