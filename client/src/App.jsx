@@ -79,7 +79,9 @@ function App() {
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
       drawLine(startX, startY, endX, endY, penColor);
-      socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth });
+      if (hasCollaborationStarted) {
+        socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth });
+      }
       setStartX(endX);
       setStartY(endY);
     }
@@ -110,26 +112,29 @@ function App() {
   }, [penColor, eraserMode, position, ctx, isDrawing, startX, startY]);
 
   useEffect(() => {
-    socket.on("draw", (data) => {
-      drawLine(
-        data.startX,
-        data.startY,
-        data.endX,
-        data.endY,
-        data.penColor,
-        data.lineWidth
-      );
-    });
-
-    socket.on("clear", () => {
-      clearRect();
-    });
-
-    return () => {
-      socket.off("draw");
-      socket.off("clear");
-    };
-  }, [socket, ctx]);
+    if (hasCollaborationStarted) {
+      socket.on("draw", (data) => {
+        console.log("on draw");
+        drawLine(
+          data.startX,
+          data.startY,
+          data.endX,
+          data.endY,
+          data.penColor,
+          data.lineWidth
+        );
+      });
+  
+      socket.on("clear", () => {
+        clearRect();
+      });
+  
+      return () => {
+        socket.off("draw");
+        socket.off("clear");
+      };
+    }
+  }, [socket, ctx, hasCollaborationStarted]);
 
   function clearRect() {
     if (ctx) {
@@ -139,7 +144,9 @@ function App() {
 
   function clearOnClick() {
     clearRect();
-    socket.emit("clear");
+    if (hasCollaborationStarted) {
+      socket.emit("clear");
+    }
   }
 
   function addStroke(e) {

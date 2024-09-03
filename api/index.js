@@ -27,7 +27,7 @@ app.get('/test', (res) => {
 })
 
 io.on('connection', (socket) => {
-    console.log('user connected socket')
+    console.log(`user ${socket.id} connected`);
     socket.on('draw', (data)=>{
         socket.broadcast.emit('draw', data);
     })

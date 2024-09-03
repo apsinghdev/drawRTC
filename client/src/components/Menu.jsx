@@ -57,12 +57,12 @@ function Menu(){
   }
 
   const openTextEditor = useCallback(() => {
-    if(!isRendering.current){
-      socket.emit("open-text-editor", data);
+    if(!isRendering.current && hasCollaboraionStarted){
+      socket.emit("open-text-editor");
     }
     setTextEditor(true);
     setMenuStateFalse(false);
-  }, [setMenuStateFalse, setTextEditor])
+  }, [setMenuStateFalse, setTextEditor, hasCollaboraionStarted])
   
   // Memoize the handler function to keep it stable and pass the ref
   const handleOpenTextEditor = useCallback((rendering) => {
@@ -71,14 +71,16 @@ function Menu(){
   }, [openTextEditor])
   
   useEffect(() => {
-    socket.on("open-text-editor", (data) => {
-      handleOpenTextEditor(true);
-    });
-  
-    return () => {
-      socket.off("open-text-editor", handleOpenTextEditor);
-    };
-  }, [handleOpenTextEditor]);
+    if (hasCollaboraionStarted) {
+      socket.on("open-text-editor", (data) => {
+        handleOpenTextEditor(true);
+      });
+    
+      return () => {
+        socket.off("open-text-editor", handleOpenTextEditor);
+      };
+    }
+  }, [handleOpenTextEditor, hasCollaboraionStarted]);
 
   const startCollab = () => {
     setCollaborationFlag(true);

@@ -1,5 +1,5 @@
-import { useSetRecoilState, useRecoilState } from "recoil";
-import { showTextEditor, textEditorInput } from "../atoms";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
+import { showTextEditor, textEditorInput, collaborationStarted } from "../atoms";
 import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
 
@@ -7,14 +7,15 @@ function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
   // const text = useRecoilValue(textEditorInput);
   const [input, setInput] =  useRecoilState(textEditorInput)
+  const hasCollaborationStarted = useRecoilValue(collaborationStarted);
   const isRendering = useRef(false);
 
   const removeTextEditor = useCallback(() => {
     setTextEditorFalse(false);
-    if (!isRendering.current) {
+    if (!isRendering.current && hasCollaborationStarted) {
       socket.emit("close-text-editor");
     }
-  }, [setTextEditorFalse])
+  }, [setTextEditorFalse, hasCollaborationStarted])
 
   const handleRemoveTextEditor = useCallback((rendering) => {
     isRendering.current = rendering;
@@ -26,23 +27,27 @@ function TextEditor() {
   }, [setInput]);
 
   useEffect(() => {
-    socket.on("close-text-editor", () => {
-      handleRemoveTextEditor(true);
-    });
-
-    socket.on("text-updated", data => {
-      handleTextEditorUpdate(data);
-    });
-
-    return () => {
-      socket.off("close-text-editor", handleRemoveTextEditor);
-    };
-  }, [handleRemoveTextEditor, handleTextEditorUpdate]);
+    if (hasCollaborationStarted) {
+      socket.on("close-text-editor", () => {
+        handleRemoveTextEditor(true);
+      });
+  
+      socket.on("text-updated", data => {
+        handleTextEditorUpdate(data);
+      });
+  
+      return () => {
+        socket.off("close-text-editor", handleRemoveTextEditor);
+      };
+    }
+  }, [handleRemoveTextEditor, handleTextEditorUpdate, hasCollaborationStarted]);
 
   function handleChange(event) {
     const value = event.target.value;
-    setInput(value); // this is asynchronous 
-    socket.emit("text-updated", value);
+    setInput(value);
+    if (hasCollaborationStarted) {
+      socket.emit("text-updated", value);
+    }
   }
 
   return (
