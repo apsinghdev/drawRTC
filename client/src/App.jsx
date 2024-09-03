@@ -114,7 +114,6 @@ function App() {
   useEffect(() => {
     if (hasCollaborationStarted) {
       socket.on("draw", (data) => {
-        console.log("on draw");
         drawLine(
           data.startX,
           data.startY,

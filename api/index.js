@@ -47,6 +47,10 @@ io.on('connection', (socket) => {
     socket.on("text-updated", (data) => {
       socket.broadcast.emit("text-updated", data);
     });
+
+    socket.on("disconnect", () => {
+        console.log(`${socket.id} disconnected`);
+    })
 })
 
 server.listen(PORT, ()=>{
