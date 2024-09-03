@@ -9,7 +9,7 @@ import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import TextEditor from "./components/TextEditor";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import {
   eraserState,
   cursorPosition,
@@ -24,7 +24,7 @@ import {
 
 const PORT = "http://localhost:8000";
 const collaboration = new Collaboration();
-const socket = collaboration.socket; 
+let socket = collaboration.socket; 
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
@@ -39,6 +39,7 @@ function App() {
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
   const textEditor = useRecoilValue(showTextEditor);
   const hasCollaborationStarted = useRecoilValue(collaborationStarted);
+  const setCollaborationFlag = useSetRecoilState(collaborationStarted);
   const [showMessage, setShowMsg] = useRecoilState(showMsg);
   const [roomId, setRoomId] = useRecoilState(roomIdAtom);
 
@@ -181,8 +182,12 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const roomID = urlParams.get('roomID');
     if (roomID) {
+
       setRoomId(roomID);
+      setCollaborationFlag(true);
+
       const newSocket = io(PORT);
+
       try {
         newSocket.on("connect", () => {
           console.log("connected");
@@ -193,6 +198,7 @@ function App() {
             console.log("Can't join the room", error);
           }
         })
+        socket = newSocket;
         collaboration.socket = newSocket;
       } catch (error) {
         console.log("Can't connect", error);
