@@ -27,7 +27,6 @@ app.get('/test', (res) => {
 })
 
 io.on('connection', (socket) => {
-    console.log(`user ${socket.id} connected`);
 
     socket.on('joinRoom', ({room_id}) => {
         socket.join(room_id);
@@ -35,23 +34,28 @@ io.on('connection', (socket) => {
     })
 
     socket.on('draw', (data)=>{
-        socket.to(data.room_id).emit('draw', data);
+        const room = data.room_id;
+        socket.to(room).emit('draw', data);
     })
 
     socket.on('clear', (data) => {
-        socket.to(data.room_id).emit('clear');
+        const room = data.room_id;
+        socket.to(room).emit('clear');
     })
 
     socket.on('open-text-editor', data => {
-        socket.to(data.room_id).emit("open-text-editor", data);
+        const room = data.room_id;
+        socket.to(room).emit("open-text-editor", data);
     })
 
     socket.on('close-text-editor', data => {
-        socket.to(data.room_id).emit("close-text-editor", data);
+        const room = data.room_id;
+        socket.to(room).emit("close-text-editor", data);
     })
     
     socket.on("text-updated", (data) => {
-        socket.to(data.room_id).emit("text-updated", data);
+        const room = data.room_id;
+        socket.to(room).emit("text-updated", data);
     });
 
     socket.on("disconnect", () => {
