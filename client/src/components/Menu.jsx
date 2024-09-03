@@ -5,9 +5,10 @@ import SponsorBtn from "./SponsorBtn";
 import { useRecoilValue, useRecoilState, useSetRecoilState} from "recoil";
 import { canvasState, canvasColors, showTextEditor, showMenuState, collaborationStarted, showMsg, roomIdAtom } from "../atoms";
 import { jsPDF } from "jspdf";
-import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
 import InfoMsg from "./InfoMsg";
+const collaboration = new Collaboration();
+const socket = collaboration.socket;
 
 function Menu(){
   const canvas = useRecoilValue(canvasState);
@@ -58,13 +59,13 @@ function Menu(){
   }
 
   const openTextEditor = useCallback(() => {
-    if(!isRendering.current && hasCollaboraionStarted){
+    if(!isRendering.current && hasCollaboraionStarted && socket){
       const data = {room_id: roomId};
       socket.emit("open-text-editor", data);
     }
     setTextEditor(true);
     setMenuStateFalse(false);
-  }, [setMenuStateFalse, setTextEditor, hasCollaboraionStarted])
+  }, [setMenuStateFalse, setTextEditor, hasCollaboraionStarted, socket])
   
   // Memoize the handler function to keep it stable and pass the ref
   const handleOpenTextEditor = useCallback((rendering) => {
@@ -73,7 +74,7 @@ function Menu(){
   }, [openTextEditor])
   
   useEffect(() => {
-    if (hasCollaboraionStarted) {
+    if (hasCollaboraionStarted && socket) {
       socket.on("open-text-editor", (data) => {
         handleOpenTextEditor(true);
       });
@@ -82,7 +83,7 @@ function Menu(){
         socket.off("open-text-editor", handleOpenTextEditor);
       };
     }
-  }, [handleOpenTextEditor, hasCollaboraionStarted]);
+  }, [handleOpenTextEditor, hasCollaboraionStarted, socket]);
 
   const startCollab = () => {
     setCollaborationFlag(true);
@@ -92,7 +93,7 @@ function Menu(){
   const stopCollab = () => {
     setCollaborationFlag(false);
     setMenuStateFalse(false);
-    socket.disconnect(); // temporary solution 
+    // socket.disconnect(); // temporary solution 
   }
 
   return (

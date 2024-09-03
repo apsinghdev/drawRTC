@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import "./App.css";
-import socket from "./socket";
 import InfoMsg from "./components/InfoMsg";
 
 import Sidebar from "./components/Sidebar";
@@ -22,6 +22,9 @@ import {
   roomIdAtom
 } from "./atoms";
 
+const PORT = "http://localhost:8000";
+const collaboration = new Collaboration();
+const socket = collaboration.socket; 
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
@@ -81,7 +84,7 @@ function App() {
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
       drawLine(startX, startY, endX, endY, penColor);
-      if (hasCollaborationStarted) {
+      if (hasCollaborationStarted && socket) {
         socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth, room_id: roomId });
       }
       setStartX(endX);
@@ -111,10 +114,10 @@ function App() {
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
     };
-  }, [penColor, eraserMode, position, ctx, isDrawing, startX, startY]);
+  }, [socket, penColor, eraserMode, position, ctx, isDrawing, startX, startY]);
 
   useEffect(() => {
-    if (hasCollaborationStarted) {
+    if (hasCollaborationStarted && socket) {
       socket.on("draw", (data) => {
         drawLine(
           data.startX,
@@ -145,7 +148,7 @@ function App() {
 
   function clearOnClick() {
     clearRect();
-    if (hasCollaborationStarted) {
+    if (hasCollaborationStarted && socket) {
       const data = {room_id: roomId};
       socket.emit("clear", data);
     }
@@ -173,6 +176,29 @@ function App() {
   const closeMsg = () => {
     setShowMsg(false);
   }
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomID = urlParams.get('roomID');
+    if (roomID) {
+      setRoomId(roomID);
+      const newSocket = io(PORT);
+      try {
+        newSocket.on("connect", () => {
+          console.log("connected");
+          try {
+            newSocket.emit("joinRoom", { room_id: roomID });
+            console.log(`joined room ${roomID}`);
+          } catch (error) {
+            console.log("Can't join the room", error);
+          }
+        })
+        collaboration.socket = newSocket;
+      } catch (error) {
+        console.log("Can't connect", error);
+      }
+    }
+  }, []);
 
   return (
     <div id="container">

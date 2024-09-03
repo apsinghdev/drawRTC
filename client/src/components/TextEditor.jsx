@@ -1,7 +1,8 @@
 import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import { showTextEditor, textEditorInput, collaborationStarted, roomIdAtom } from "../atoms";
-import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
+const collaboration = new Collaboration();
+const socket = collaboration.socket;
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
@@ -12,11 +13,11 @@ function TextEditor() {
 
   const removeTextEditor = useCallback(() => {
     setTextEditorFalse(false);
-    if (!isRendering.current && hasCollaborationStarted) {
+    if (!isRendering.current && hasCollaborationStarted && socket) {
       const data = {room_id: roomId};
       socket.emit("close-text-editor", data);
     }
-  }, [setTextEditorFalse, hasCollaborationStarted])
+  }, [setTextEditorFalse, hasCollaborationStarted, socket])
 
   const handleRemoveTextEditor = useCallback((rendering) => {
     isRendering.current = rendering;
@@ -28,7 +29,7 @@ function TextEditor() {
   }, [setInput]);
 
   useEffect(() => {
-    if (hasCollaborationStarted) {
+    if (hasCollaborationStarted && socket) {
       socket.on("close-text-editor", () => {
         handleRemoveTextEditor(true);
       });
@@ -41,12 +42,12 @@ function TextEditor() {
         socket.off("close-text-editor", handleRemoveTextEditor);
       };
     }
-  }, [handleRemoveTextEditor, handleTextEditorUpdate, hasCollaborationStarted]);
+  }, [handleRemoveTextEditor, handleTextEditorUpdate, hasCollaborationStarted, socket]);
 
   function handleChange(event) {
     const value = event.target.value;
     setInput(value);
-    if (hasCollaborationStarted) {
+    if (hasCollaborationStarted && socket) {
       const data = {value, room_id: roomId}
       socket.emit("text-updated", data);
     }
