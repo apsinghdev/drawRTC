@@ -3,7 +3,7 @@ import MenuItem from "./MenuItem";
 import Socials from "./Socials";
 import SponsorBtn from "./SponsorBtn";
 import { useRecoilValue, useRecoilState, useSetRecoilState} from "recoil";
-import { canvasState, canvasColors, showTextEditor, showMenuState, collaborationStarted, showMsg } from "../atoms";
+import { canvasState, canvasColors, showTextEditor, showMenuState, collaborationStarted, showMsg, roomIdAtom } from "../atoms";
 import { jsPDF } from "jspdf";
 import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
@@ -18,6 +18,7 @@ function Menu(){
   let isRendering = useRef(false);
   const showMessage = useRecoilValue(showMsg);
   const changeShowMsg = useSetRecoilState(showMsg);
+  const roomId = useRecoilValue(roomIdAtom);
   // function to save canvas as pdf
   function saveAsPdf() {
     const canvasDataURL = canvas.toDataURL("image/png");
@@ -58,7 +59,8 @@ function Menu(){
 
   const openTextEditor = useCallback(() => {
     if(!isRendering.current && hasCollaboraionStarted){
-      socket.emit("open-text-editor");
+      const data = {room_id: roomId};
+      socket.emit("open-text-editor", data);
     }
     setTextEditor(true);
     setMenuStateFalse(false);

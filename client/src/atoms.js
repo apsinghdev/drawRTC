@@ -45,3 +45,9 @@ export const showMsg = atom({
   key: "showMsg",
   default: false
 })
+
+
+export const roomIdAtom = atom({
+  key: "roomIdAtom",
+  default: null
+})

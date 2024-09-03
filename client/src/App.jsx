@@ -18,7 +18,8 @@ import {
   showMenuState,
   showTextEditor,
   collaborationStarted,
-  showMsg
+  showMsg,
+  roomIdAtom
 } from "./atoms";
 
 
@@ -36,6 +37,7 @@ function App() {
   const textEditor = useRecoilValue(showTextEditor);
   const hasCollaborationStarted = useRecoilValue(collaborationStarted);
   const [showMessage, setShowMsg] = useRecoilState(showMsg);
+  const [roomId, setRoomId] = useRecoilState(roomIdAtom);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -80,7 +82,7 @@ function App() {
       const endY = e.clientY - canvas.getBoundingClientRect().top;
       drawLine(startX, startY, endX, endY, penColor);
       if (hasCollaborationStarted) {
-        socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth });
+        socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth, room_id: roomId });
       }
       setStartX(endX);
       setStartY(endY);
@@ -144,7 +146,8 @@ function App() {
   function clearOnClick() {
     clearRect();
     if (hasCollaborationStarted) {
-      socket.emit("clear");
+      const data = {room_id: roomId};
+      socket.emit("clear", data);
     }
   }
 
