@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import socket from "./socket";
+import InfoMsg from "./components/InfoMsg";
 
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
@@ -16,6 +17,8 @@ import {
   canvasState,
   showMenuState,
   showTextEditor,
+  collaborationStarted,
+  showMsg
 } from "./atoms";
 
 
@@ -31,7 +34,8 @@ function App() {
   const canvasColor = useRecoilValue(canvasColors);
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
   const textEditor = useRecoilValue(showTextEditor);
-
+  const hasCollaborationStarted = useRecoilValue(collaborationStarted);
+  const [showMessage, setShowMsg] = useRecoilState(showMsg);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -157,6 +161,10 @@ function App() {
     }
   }
 
+  const closeMsg = () => {
+    setShowMsg(false);
+  }
+
   return (
     <div id="container">
       <Sidebar
@@ -171,6 +179,7 @@ function App() {
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
       {textEditor && <TextEditor></TextEditor>}
+      {showMessage && <InfoMsg message="" clickHandler={closeMsg}></InfoMsg>}
     </div>
   );
 }

@@ -3,18 +3,21 @@ import MenuItem from "./MenuItem";
 import Socials from "./Socials";
 import SponsorBtn from "./SponsorBtn";
 import { useRecoilValue, useRecoilState, useSetRecoilState} from "recoil";
-import { canvasState, canvasColors, showTextEditor, showMenuState } from "../atoms";
+import { canvasState, canvasColors, showTextEditor, showMenuState, collaborationStarted, showMsg } from "../atoms";
 import { jsPDF } from "jspdf";
 import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
+import InfoMsg from "./InfoMsg";
 
 function Menu(){
   const canvas = useRecoilValue(canvasState);
   const canvasColor = useRecoilValue(canvasColors);
   const [textEditor, setTextEditor] = useRecoilState(showTextEditor)
   const setMenuStateFalse = useSetRecoilState(showMenuState);
+  const [hasCollaboraionStarted, setCollaborationFlag] = useRecoilState(collaborationStarted);
   let isRendering = useRef(false);
-  
+  const showMessage = useRecoilValue(showMsg);
+  const changeShowMsg = useSetRecoilState(showMsg);
   // function to save canvas as pdf
   function saveAsPdf() {
     const canvasDataURL = canvas.toDataURL("image/png");
@@ -54,7 +57,6 @@ function Menu(){
   }
 
   const openTextEditor = useCallback(() => {
-    const data = "ajeet";
     if(!isRendering.current){
       socket.emit("open-text-editor", data);
     }
@@ -78,9 +80,15 @@ function Menu(){
     };
   }, [handleOpenTextEditor]);
 
+  const startCollab = () => {
+    setCollaborationFlag(true);
+    setMenuStateFalse(false);
+    changeShowMsg(true);
+  }
+
   return (
     <div className="w-52 h-71 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
-      <MenuItem feat="Start Collaboration"></MenuItem>
+      <MenuItem feat="Start Collaboration" clickHandler={startCollab}></MenuItem>
       <MenuItem feat="Save as pdf" clickHandler={saveAsPdf}></MenuItem>
       <MenuItem feat="Save as png" clickHandler={saveAsPng}></MenuItem>
       <MenuItem feat="Open text editor" clickHandler={openTextEditor}></MenuItem>
