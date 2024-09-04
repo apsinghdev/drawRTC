@@ -83,6 +83,11 @@ function Menu(){
     console.log("Disconnected from the collaboration room");
   }
 
+  const openGithub = () => {
+    const gitLink = "https://github.com/apsinghdev/drawRTC?tab=readme-ov-file#note";
+    window.open(gitLink, "_blank");
+  }
+
   return (
     <div className="w-52 h-71 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
       {hasCollaborationStarted ? (
@@ -93,6 +98,7 @@ function Menu(){
       <MenuItem feat="Save as pdf" clickHandler={saveAsPdf}></MenuItem>
       <MenuItem feat="Save as png" clickHandler={saveAsPng}></MenuItem>
       <MenuItem feat="Open text editor" clickHandler={openTextEditor}></MenuItem>
+      <MenuItem feat="Github" clickHandler={openGithub}></MenuItem>
       <SponsorBtn></SponsorBtn>
       <Socials></Socials>
     </div>
