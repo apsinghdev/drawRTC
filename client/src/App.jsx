@@ -243,7 +243,7 @@ function App() {
 
   // Hook to display a message when someone opens the app through vercel's url
   useEffect(() => {
-    const isVercel = window.location.hostname === "https://drawrtcbyajeet.vercel.app/"
+    const isVercel = window.location.hostname === "drawrtcbyajeet.vercel.app"
     if (isVercel) {
       setMessageText("Collaborative features require local installation. For more information, please visit our GitHub repository (linked in the menu).");
       setShowMenu(true);
