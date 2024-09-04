@@ -60,7 +60,6 @@ function Menu(){
   }
 
   const openTextEditor = useCallback(() => {
-    console.log("socket", socket);
     if(!isRendering.current && hasCollaborationStarted && socket){
       const data = {room_id: roomId};
       socket.emit("open-text-editor", data);
