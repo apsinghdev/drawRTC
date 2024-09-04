@@ -9,6 +9,8 @@ A real-time collaboration project to draw with your friends.
 
 [![Demo video](https://img.youtube.com/vi/74T8SncLnE8/maxresdefault.jpg)](https://youtu.be/74T8SncLnE8?si=T-uwfenkqrkfhn9q?autoplay=1)
 
+### Note
+
 > Unfortunately, Vercel's free plan does not support WebSocket functionality, so I was unable to deploy the backend to production. To use the collaborative features of the app, you'll need to set up the application locally. The setup steps are provided below, and I've also included a demonstration video of the local setup process above. Thank you!
 
 ## Instructions
