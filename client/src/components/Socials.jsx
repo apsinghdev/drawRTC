@@ -9,8 +9,8 @@ function Socials(){
     <div className="flex items-center justify-center my-3">
       <h1 className="text-white mr-2 cursor-pointer font-sans" onClick={clickHandler}>
         Built By{" "}
-        <span className="font-mono text-emerald-300 hover:lowercase">
-          AJEET
+        <span className="font-mono text-emerald-300">
+          Ajeet
         </span>
       </h1>
       <img

@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import "./App.css";
-import socket from "./socket";
-
+import InfoMsg from "./components/InfoMsg";
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
 import EraserCursor from "./components/EraserCursor";
 import TextEditor from "./components/TextEditor";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import {
   eraserState,
   cursorPosition,
@@ -16,9 +16,14 @@ import {
   canvasState,
   showMenuState,
   showTextEditor,
+  collaborationStarted,
+  showMsg,
+  roomIdAtom,
+  messageTxtAtom
 } from "./atoms";
+import { useSocket } from "./Context";
 
-socket.connect();
+const PORT = "http://localhost:8000"; 
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
@@ -32,7 +37,13 @@ function App() {
   const canvasColor = useRecoilValue(canvasColors);
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
   const textEditor = useRecoilValue(showTextEditor);
-
+  const setTextEditor = useSetRecoilState(showTextEditor);
+  const hasCollaborationStarted = useRecoilValue(collaborationStarted);
+  const setCollaborationFlag = useSetRecoilState(collaborationStarted);
+  const [showMessage, setShowMsg] = useRecoilState(showMsg);
+  const [roomId, setRoomId] = useRecoilState(roomIdAtom);
+  const { socket, setSocket } = useSocket();
+  const [ messageText, setMessageText ] = useRecoilState(messageTxtAtom);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -76,7 +87,9 @@ function App() {
       const endX = e.clientX - canvas.getBoundingClientRect().left;
       const endY = e.clientY - canvas.getBoundingClientRect().top;
       drawLine(startX, startY, endX, endY, penColor);
-      socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth });
+      if (hasCollaborationStarted && socket) {
+        socket.emit("draw", { startX, startY, endX, endY, penColor, lineWidth, room_id: roomId });
+      }
       setStartX(endX);
       setStartY(endY);
     }
@@ -104,29 +117,31 @@ function App() {
       canvas.removeEventListener("mousedown", handleMousedown);
       canvas.removeEventListener("mouseup", handleMouseup);
     };
-  }, [penColor, eraserMode, position, ctx, isDrawing, startX, startY]);
+  }, [socket, penColor, eraserMode, position, ctx, isDrawing, startX, startY]);
 
   useEffect(() => {
-    socket.on("draw", (data) => {
-      drawLine(
-        data.startX,
-        data.startY,
-        data.endX,
-        data.endY,
-        data.penColor,
-        data.lineWidth
-      );
-    });
-
-    socket.on("clear", () => {
-      clearRect();
-    });
-
-    return () => {
-      socket.off("draw");
-      socket.off("clear");
-    };
-  }, [socket, ctx]);
+    if (hasCollaborationStarted && socket) {
+      socket.on("draw", (data) => {
+        drawLine(
+          data.startX,
+          data.startY,
+          data.endX,
+          data.endY,
+          data.penColor,
+          data.lineWidth
+        );
+      });
+  
+      socket.on("clear", () => {
+        clearRect();
+      });
+  
+      return () => {
+        socket.off("draw");
+        socket.off("clear");
+      };
+    }
+  }, [socket, ctx, hasCollaborationStarted]);
 
   function clearRect() {
     if (ctx) {
@@ -136,7 +151,10 @@ function App() {
 
   function clearOnClick() {
     clearRect();
-    socket.emit("clear");
+    if (hasCollaborationStarted && socket) {
+      const data = {room_id: roomId};
+      socket.emit("clear", data);
+    }
   }
 
   function addStroke(e) {
@@ -158,6 +176,71 @@ function App() {
     }
   }
 
+  const closeMsg = () => {
+    setMessageText(null);
+    setShowMsg(false);
+  }
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomID = urlParams.get("roomID");
+    const RETRIES = 5;
+    const DELAY_DURATION = 2000;
+    let attempts = 0;
+  
+    const closeConnection = (socket) => {
+      if (attempts >= RETRIES) {
+        socket.disconnect();
+        setCollaborationFlag(false);
+        console.log("Max socket calls exceeded. Please try connecting again.")
+      }
+    }
+
+    if (roomID) {
+      const collaborationLink = window.location.href;
+      setRoomId(roomID);
+      setCollaborationFlag(true);
+      const newSocket = io(PORT);
+
+      try {
+        newSocket.on("connect", () => {
+          console.log("connected");
+          try {
+            newSocket.emit("joinRoom", { room_id: roomID });
+            console.log(`joined room ${roomID}`);
+            setSocket(newSocket);
+            setMessageText(`Collaboration Link : ${collaborationLink}`);
+            setShowMsg(true);
+          } catch (error) {
+            console.log("Can't join the room", error);
+          }
+        });
+
+        newSocket.on("connect_error", (error) => {
+          attempts++;
+          console.log("Failed to connect to the socket server. Retrying...")
+          setTimeout(() => closeConnection(newSocket), DELAY_DURATION);
+        })
+
+      } catch (error) {
+        console.log("Can't connect", error);
+      }
+    }
+  }, []);
+
+  // Hook to listen the events emitted by the server
+  useEffect(() => {
+    if (hasCollaborationStarted && socket) {
+      socket.on("open-text-editor", () => {
+        setTextEditor(true);
+      });
+
+      return () => {
+        socket.off("open-text-editor");
+      };
+    }
+  }, [showTextEditor, socket, hasCollaborationStarted]);
+
   return (
     <div id="container">
       <Sidebar
@@ -172,6 +255,7 @@ function App() {
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
       {textEditor && <TextEditor></TextEditor>}
+      {showMessage && <InfoMsg message={messageText} clickHandler={closeMsg}></InfoMsg>}
     </div>
   );
 }

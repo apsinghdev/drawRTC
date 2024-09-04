@@ -3,18 +3,25 @@ import MenuItem from "./MenuItem";
 import Socials from "./Socials";
 import SponsorBtn from "./SponsorBtn";
 import { useRecoilValue, useRecoilState, useSetRecoilState} from "recoil";
-import { canvasState, canvasColors, showTextEditor, showMenuState } from "../atoms";
+import { canvasState, canvasColors, showTextEditor, showMenuState, collaborationStarted, showMsg, roomIdAtom } from "../atoms";
 import { jsPDF } from "jspdf";
-import socket from "../socket";
 import { useCallback, useEffect, useRef } from "react";
+import InfoMsg from "./InfoMsg";
+import { useSocket } from "../Context";
+import redirectToCollabLink from "../generateLink";
 
 function Menu(){
   const canvas = useRecoilValue(canvasState);
   const canvasColor = useRecoilValue(canvasColors);
   const [textEditor, setTextEditor] = useRecoilState(showTextEditor)
   const setMenuStateFalse = useSetRecoilState(showMenuState);
+  const [hasCollaborationStarted, setCollaborationFlag] = useRecoilState(collaborationStarted);
   let isRendering = useRef(false);
-  
+  const showMessage = useRecoilValue(showMsg);
+  const changeShowMsg = useSetRecoilState(showMsg);
+  const roomId = useRecoilValue(roomIdAtom);
+  const { socket } = useSocket();
+
   // function to save canvas as pdf
   function saveAsPdf() {
     const canvasDataURL = canvas.toDataURL("image/png");
@@ -54,34 +61,35 @@ function Menu(){
   }
 
   const openTextEditor = useCallback(() => {
-    const data = "ajeet";
-    if(!isRendering.current){
+    if(!isRendering.current && hasCollaborationStarted && socket){
+      const data = {room_id: roomId};
       socket.emit("open-text-editor", data);
     }
     setTextEditor(true);
     setMenuStateFalse(false);
-  }, [setMenuStateFalse, setTextEditor])
+  }, [setMenuStateFalse, setTextEditor, hasCollaborationStarted, socket])
   
-  // Memoize the handler function to keep it stable and pass the ref
-  const handleOpenTextEditor = useCallback((rendering) => {
-    isRendering.current = rendering;
-    openTextEditor();
-  }, [openTextEditor])
-  
-  useEffect(() => {
-    socket.on("open-text-editor", (data) => {
-      handleOpenTextEditor(true);
-    });
-  
-    return () => {
-      socket.off("open-text-editor", handleOpenTextEditor);
-    };
-  }, [handleOpenTextEditor]);
+
+  const startCollab = () => {
+    setCollaborationFlag(true);
+    setMenuStateFalse(false);
+    redirectToCollabLink();
+  };
+
+  const stopCollab = () => {
+    setCollaborationFlag(false);
+    setMenuStateFalse(false);
+    socket.disconnect();
+    console.log("Disconnected from the collaboration room");
+  }
 
   return (
     <div className="w-52 h-71 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
-      <MenuItem feat="Start Collaboration"></MenuItem>
-      <MenuItem feat="Start Chat"></MenuItem>
+      {hasCollaborationStarted ? (
+        <MenuItem feat="Stop Collaboration" clickHandler={stopCollab}></MenuItem>  
+      ) : (
+        <MenuItem feat="Start Collaboration" clickHandler={startCollab}></MenuItem>
+      )}
       <MenuItem feat="Save as pdf" clickHandler={saveAsPdf}></MenuItem>
       <MenuItem feat="Save as png" clickHandler={saveAsPng}></MenuItem>
       <MenuItem feat="Open text editor" clickHandler={openTextEditor}></MenuItem>

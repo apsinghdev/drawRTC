@@ -1,20 +1,23 @@
-import { useSetRecoilState, useRecoilState } from "recoil";
-import { showTextEditor, textEditorInput } from "../atoms";
-import socket from "../socket";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
+import { showTextEditor, textEditorInput, collaborationStarted, roomIdAtom } from "../atoms";
 import { useCallback, useEffect, useRef } from "react";
+import { useSocket } from "../Context";
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
-  // const text = useRecoilValue(textEditorInput);
   const [input, setInput] =  useRecoilState(textEditorInput)
+  const hasCollaborationStarted = useRecoilValue(collaborationStarted);
   const isRendering = useRef(false);
+  const roomId = useRecoilValue(roomIdAtom);
+  const { socket } = useSocket();
 
   const removeTextEditor = useCallback(() => {
     setTextEditorFalse(false);
-    if (!isRendering.current) {
-      socket.emit("close-text-editor");
+    if (!isRendering.current && hasCollaborationStarted && socket) {
+      const data = {room_id: roomId};
+      socket.emit("close-text-editor", data);
     }
-  }, [setTextEditorFalse])
+  }, [setTextEditorFalse, hasCollaborationStarted, socket])
 
   const handleRemoveTextEditor = useCallback((rendering) => {
     isRendering.current = rendering;
@@ -26,23 +29,28 @@ function TextEditor() {
   }, [setInput]);
 
   useEffect(() => {
-    socket.on("close-text-editor", () => {
-      handleRemoveTextEditor(true);
-    });
-
-    socket.on("text-updated", data => {
-      handleTextEditorUpdate(data);
-    });
-
-    return () => {
-      socket.off("close-text-editor", handleRemoveTextEditor);
-    };
-  }, [handleRemoveTextEditor, handleTextEditorUpdate]);
+    if (hasCollaborationStarted && socket) {
+      socket.on("close-text-editor", () => {
+        handleRemoveTextEditor(true);
+      });
+  
+      socket.on("text-updated", data => {
+        handleTextEditorUpdate(data.value);
+      });
+  
+      return () => {
+        socket.off("close-text-editor", handleRemoveTextEditor);
+      };
+    }
+  }, [handleRemoveTextEditor, handleTextEditorUpdate, hasCollaborationStarted, socket]);
 
   function handleChange(event) {
     const value = event.target.value;
-    setInput(value); // this is asynchronous 
-    socket.emit("text-updated", value);
+    setInput(value);
+    if (hasCollaborationStarted && socket) {
+      const data = {value, room_id: roomId}
+      socket.emit("text-updated", data);
+    }
   }
 
   return (

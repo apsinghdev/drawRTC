@@ -27,26 +27,40 @@ app.get('/test', (res) => {
 })
 
 io.on('connection', (socket) => {
-    console.log('user connected socket')
-    socket.on('draw', (data)=>{
-        socket.broadcast.emit('draw', data);
+
+    socket.on('joinRoom', ({room_id}) => {
+        socket.join(room_id);
+        console.log(`User ${socket.id} joined room ${room_id}`);
     })
 
-    socket.on('clear', () => {
-        io.emit('clear');
+    socket.on('draw', (data)=>{
+        const room = data.room_id;
+        socket.to(room).emit('draw', data);
+    })
+
+    socket.on('clear', (data) => {
+        const room = data.room_id;
+        socket.to(room).emit('clear');
     })
 
     socket.on('open-text-editor', data => {
-        socket.broadcast.emit("open-text-editor", data);
+        const room = data.room_id;
+        socket.to(room).emit("open-text-editor", data);
     })
 
     socket.on('close-text-editor', data => {
-        socket.broadcast.emit("close-text-editor", data);
+        const room = data.room_id;
+        socket.to(room).emit("close-text-editor", data);
     })
     
     socket.on("text-updated", (data) => {
-      socket.broadcast.emit("text-updated", data);
+        const room = data.room_id;
+        socket.to(room).emit("text-updated", data);
     });
+
+    socket.on("disconnect", () => {
+        console.log(`${socket.id} disconnected`);
+    })
 })
 
 server.listen(PORT, ()=>{

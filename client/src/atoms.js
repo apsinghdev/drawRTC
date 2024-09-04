@@ -35,3 +35,23 @@ export const textEditorInput = atom({
   key: "textEditorInput",
   default: ''
 })
+
+export const collaborationStarted = atom({
+  key: "collaboraionstarted",
+  default: false
+})
+
+export const showMsg = atom({
+  key: "showMsg",
+  default: false
+})
+
+export const roomIdAtom = atom({
+  key: "roomIdAtom",
+  default: null
+})
+
+export const messageTxtAtom = atom({
+  key: "msgTxtAtom",
+  default: null
+});
