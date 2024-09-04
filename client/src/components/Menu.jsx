@@ -64,29 +64,11 @@ function Menu(){
     if(!isRendering.current && hasCollaborationStarted && socket){
       const data = {room_id: roomId};
       socket.emit("open-text-editor", data);
-      console.log("emit te");
     }
     setTextEditor(true);
     setMenuStateFalse(false);
   }, [setMenuStateFalse, setTextEditor, hasCollaborationStarted, socket])
   
-  // Memoize the handler function to keep it stable and pass the ref
-  const handleOpenTextEditor = useCallback((rendering) => {
-    isRendering.current = rendering;
-    openTextEditor();
-  }, [openTextEditor, isRendering]);
-  
-  useEffect(() => {
-    if (hasCollaborationStarted && socket) {
-      socket.on("open-text-editor", (data) => {
-        handleOpenTextEditor(true);
-      });
-    
-      return () => {
-        socket.off("open-text-editor", handleOpenTextEditor);
-      };
-    }
-  }, [handleOpenTextEditor, hasCollaborationStarted, socket]);
 
   const startCollab = () => {
     setCollaborationFlag(true);

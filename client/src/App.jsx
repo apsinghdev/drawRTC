@@ -36,6 +36,7 @@ function App() {
   const canvasColor = useRecoilValue(canvasColors);
   const [currentCanvas, setCanvas] = useRecoilState(canvasState);
   const textEditor = useRecoilValue(showTextEditor);
+  const setTextEditor = useSetRecoilState(showTextEditor);
   const hasCollaborationStarted = useRecoilValue(collaborationStarted);
   const setCollaborationFlag = useSetRecoilState(collaborationStarted);
   const [showMessage, setShowMsg] = useRecoilState(showMsg);
@@ -203,6 +204,19 @@ function App() {
       }
     }
   }, []);
+
+  // Hook to listen the events emitted by the server
+  useEffect(() => {
+    if (hasCollaborationStarted && socket) {
+      socket.on("open-text-editor", () => {
+        setTextEditor(true);
+      });
+
+      return () => {
+        socket.off("open-text-editor");
+      };
+    }
+  }, [showTextEditor, socket, hasCollaborationStarted]);
 
   return (
     <div id="container">
