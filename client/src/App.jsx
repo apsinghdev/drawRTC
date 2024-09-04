@@ -184,6 +184,18 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const roomID = urlParams.get("roomID");
+    const RETRIES = 5;
+    const DELAY_DURATION = 2000;
+    let attempts = 0;
+  
+    const closeConnection = (socket) => {
+      if (attempts >= RETRIES) {
+        socket.disconnect();
+        setCollaborationFlag(false);
+        console.log("Max socket calls exceeded. Please try connecting again.")
+      }
+    }
+
     if (roomID) {
       const collaborationLink = window.location.href;
       setRoomId(roomID);
@@ -196,13 +208,20 @@ function App() {
           try {
             newSocket.emit("joinRoom", { room_id: roomID });
             console.log(`joined room ${roomID}`);
+            setSocket(newSocket);
+            setMessageText(`Collaboration Link : ${collaborationLink}`);
+            setShowMsg(true);
           } catch (error) {
             console.log("Can't join the room", error);
           }
         });
-        setSocket(newSocket);
-        setMessageText(`Collaboration Link : ${collaborationLink}`);
-        setShowMsg(true);
+
+        newSocket.on("connect_error", (error) => {
+          attempts++;
+          console.log("Failed to connect to the socket server. Retrying...")
+          setTimeout(() => closeConnection(newSocket), DELAY_DURATION);
+        })
+
       } catch (error) {
         console.log("Can't connect", error);
       }
