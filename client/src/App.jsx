@@ -246,7 +246,7 @@ function App() {
     const isVercel = window.location.hostname === "drawrtcbyajeet.vercel.app"
     if (isVercel) {
       setMessageText("Collaborative features require local installation. For more information, please visit our GitHub repository (linked in the menu).");
-      setShowMenu(true);
+      setShowMsg(true);
     }
   }, []);
 
