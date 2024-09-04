@@ -14,7 +14,7 @@ function Menu(){
   const canvasColor = useRecoilValue(canvasColors);
   const [textEditor, setTextEditor] = useRecoilState(showTextEditor)
   const setMenuStateFalse = useSetRecoilState(showMenuState);
-  const [hasCollaboraionStarted, setCollaborationFlag] = useRecoilState(collaborationStarted);
+  const [hasCollaborationStarted, setCollaborationFlag] = useRecoilState(collaborationStarted);
   let isRendering = useRef(false);
   const showMessage = useRecoilValue(showMsg);
   const changeShowMsg = useSetRecoilState(showMsg);
@@ -61,14 +61,14 @@ function Menu(){
 
   const openTextEditor = useCallback(() => {
     console.log("socket", socket);
-    if(!isRendering.current && hasCollaboraionStarted && socket){
+    if(!isRendering.current && hasCollaborationStarted && socket){
       const data = {room_id: roomId};
       socket.emit("open-text-editor", data);
       console.log("emit te");
     }
     setTextEditor(true);
     setMenuStateFalse(false);
-  }, [setMenuStateFalse, setTextEditor, hasCollaboraionStarted, socket])
+  }, [setMenuStateFalse, setTextEditor, hasCollaborationStarted, socket])
   
   // Memoize the handler function to keep it stable and pass the ref
   const handleOpenTextEditor = useCallback((rendering) => {
@@ -77,7 +77,7 @@ function Menu(){
   }, [openTextEditor, isRendering]);
   
   useEffect(() => {
-    if (hasCollaboraionStarted && socket) {
+    if (hasCollaborationStarted && socket) {
       socket.on("open-text-editor", (data) => {
         handleOpenTextEditor(true);
       });
@@ -86,7 +86,7 @@ function Menu(){
         socket.off("open-text-editor", handleOpenTextEditor);
       };
     }
-  }, [handleOpenTextEditor, hasCollaboraionStarted, socket]);
+  }, [handleOpenTextEditor, hasCollaborationStarted, socket]);
 
   const startCollab = () => {
     setCollaborationFlag(true);
@@ -101,7 +101,7 @@ function Menu(){
 
   return (
     <div className="w-52 h-71 rounded-xl bg-gradient-to-r from-slate-900 to-slate-700 absolute left-52 top-8 rounded-lg shadow-xl">
-      {hasCollaboraionStarted ? (
+      {hasCollaborationStarted ? (
         <MenuItem feat="Stop Collaboration" clickHandler={stopCollab}></MenuItem>  
       ) : (
         <MenuItem feat="Start Collaboration" clickHandler={startCollab}></MenuItem>
