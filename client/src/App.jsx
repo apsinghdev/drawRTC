@@ -18,7 +18,8 @@ import {
   showTextEditor,
   collaborationStarted,
   showMsg,
-  roomIdAtom
+  roomIdAtom,
+  messageTxtAtom
 } from "./atoms";
 import { useSocket } from "./Context";
 
@@ -42,6 +43,7 @@ function App() {
   const [showMessage, setShowMsg] = useRecoilState(showMsg);
   const [roomId, setRoomId] = useRecoilState(roomIdAtom);
   const { socket, setSocket } = useSocket();
+  const [ messageText, setMessageText ] = useRecoilState(messageTxtAtom);
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -175,17 +177,17 @@ function App() {
   }
 
   const closeMsg = () => {
+    setMessageText(null);
     setShowMsg(false);
   }
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const roomID = urlParams.get('roomID');
+    const roomID = urlParams.get("roomID");
     if (roomID) {
-
+      const collaborationLink = window.location.href;
       setRoomId(roomID);
       setCollaborationFlag(true);
-
       const newSocket = io(PORT);
 
       try {
@@ -197,8 +199,10 @@ function App() {
           } catch (error) {
             console.log("Can't join the room", error);
           }
-        })
+        });
         setSocket(newSocket);
+        setMessageText(`Collaboration Link : ${collaborationLink}`);
+        setShowMsg(true);
       } catch (error) {
         console.log("Can't connect", error);
       }
@@ -232,7 +236,7 @@ function App() {
       {eraserMode && <EraserCursor></EraserCursor>}
       {showMenu && <Menu></Menu>}
       {textEditor && <TextEditor></TextEditor>}
-      {showMessage && <InfoMsg message="" clickHandler={closeMsg}></InfoMsg>}
+      {showMessage && <InfoMsg message={messageText} clickHandler={closeMsg}></InfoMsg>}
     </div>
   );
 }

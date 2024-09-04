@@ -8,6 +8,7 @@ import { jsPDF } from "jspdf";
 import { useCallback, useEffect, useRef } from "react";
 import InfoMsg from "./InfoMsg";
 import { useSocket } from "../Context";
+import redirectToCollabLink from "../generateLink";
 
 function Menu(){
   const canvas = useRecoilValue(canvasState);
@@ -72,12 +73,14 @@ function Menu(){
   const startCollab = () => {
     setCollaborationFlag(true);
     setMenuStateFalse(false);
+    redirectToCollabLink();
   };
 
   const stopCollab = () => {
     setCollaborationFlag(false);
     setMenuStateFalse(false);
-    // socket.disconnect(); // temporary solution 
+    socket.disconnect();
+    console.log("Disconnected from the collaboration room");
   }
 
   return (
