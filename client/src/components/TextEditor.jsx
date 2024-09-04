@@ -1,8 +1,7 @@
 import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import { showTextEditor, textEditorInput, collaborationStarted, roomIdAtom } from "../atoms";
 import { useCallback, useEffect, useRef } from "react";
-const collaboration = new Collaboration();
-const socket = collaboration.socket;
+import { useSocket } from "../Context";
 
 function TextEditor() {
   const setTextEditorFalse = useSetRecoilState(showTextEditor);
@@ -10,6 +9,7 @@ function TextEditor() {
   const hasCollaborationStarted = useRecoilValue(collaborationStarted);
   const isRendering = useRef(false);
   const roomId = useRecoilValue(roomIdAtom);
+  const { socket } = useSocket();
 
   const removeTextEditor = useCallback(() => {
     setTextEditorFalse(false);

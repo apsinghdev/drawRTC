@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import "./App.css";
 import InfoMsg from "./components/InfoMsg";
-
 import Sidebar from "./components/Sidebar";
 import Canvas from "./components/Canvas";
 import Menu from "./components/Menu";
@@ -21,10 +20,9 @@ import {
   showMsg,
   roomIdAtom
 } from "./atoms";
+import { useSocket } from "./Context";
 
-const PORT = "http://localhost:8000";
-const collaboration = new Collaboration();
-let socket = collaboration.socket; 
+const PORT = "http://localhost:8000"; 
 
 function App() {
   const [showMenu, setShowMenu] = useRecoilState(showMenuState);
@@ -42,6 +40,7 @@ function App() {
   const setCollaborationFlag = useSetRecoilState(collaborationStarted);
   const [showMessage, setShowMsg] = useRecoilState(showMsg);
   const [roomId, setRoomId] = useRecoilState(roomIdAtom);
+  const { socket, setSocket } = useSocket();
 
   function toggleMenu() {
     setShowMenu(!showMenu);
@@ -198,8 +197,7 @@ function App() {
             console.log("Can't join the room", error);
           }
         })
-        socket = newSocket;
-        collaboration.socket = newSocket;
+        setSocket(newSocket);
       } catch (error) {
         console.log("Can't connect", error);
       }

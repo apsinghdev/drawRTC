@@ -7,8 +7,7 @@ import { canvasState, canvasColors, showTextEditor, showMenuState, collaboration
 import { jsPDF } from "jspdf";
 import { useCallback, useEffect, useRef } from "react";
 import InfoMsg from "./InfoMsg";
-const collaboration = new Collaboration();
-const socket = collaboration.socket;
+import { useSocket } from "../Context";
 
 function Menu(){
   const canvas = useRecoilValue(canvasState);
@@ -20,6 +19,8 @@ function Menu(){
   const showMessage = useRecoilValue(showMsg);
   const changeShowMsg = useSetRecoilState(showMsg);
   const roomId = useRecoilValue(roomIdAtom);
+  const { socket } = useSocket();
+
   // function to save canvas as pdf
   function saveAsPdf() {
     const canvasDataURL = canvas.toDataURL("image/png");
@@ -59,9 +60,11 @@ function Menu(){
   }
 
   const openTextEditor = useCallback(() => {
+    console.log("socket", socket);
     if(!isRendering.current && hasCollaboraionStarted && socket){
       const data = {room_id: roomId};
       socket.emit("open-text-editor", data);
+      console.log("emit te");
     }
     setTextEditor(true);
     setMenuStateFalse(false);
@@ -71,7 +74,7 @@ function Menu(){
   const handleOpenTextEditor = useCallback((rendering) => {
     isRendering.current = rendering;
     openTextEditor();
-  }, [openTextEditor])
+  }, [openTextEditor, isRendering]);
   
   useEffect(() => {
     if (hasCollaboraionStarted && socket) {
