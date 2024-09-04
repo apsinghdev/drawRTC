@@ -1,8 +1,10 @@
 import {v4 as uuidv4} from "uuid";
 
+const url = "http://localhost:5173/";
+
 const generateCollabLink = () => {
     const uniqueId = uuidv4();
-    const link = `http://localhost:5173/?roomID=${uniqueId}`;
+    const link = `${url}?roomID=${uniqueId}`;
     return link;
 }
 
