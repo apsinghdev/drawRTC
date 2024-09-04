@@ -2,7 +2,7 @@
 
 A real-time collaboration project to draw with your friends.
 
-![](./drawRTC.png)
+![Collaboration Demo](./collaboration.gif)
 
 ## Demo
 (click on the thumbnail below)
