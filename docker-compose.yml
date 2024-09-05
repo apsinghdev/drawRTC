@@ -5,7 +5,7 @@ services:
     build:
       context: ./api 
       dockerfile: Dockerfile  
-    image: rtc-api:1.0  
+    image: rtc-api:latest  
     ports:
       - "8000:8000"
     volumes:
@@ -17,7 +17,7 @@ services:
     build:
       context: ./client 
       dockerfile: Dockerfile  
-    image: rtc-client:1.1 
+    image: rtc-client:latest
     ports:
       - "5173:5173"
     volumes:
