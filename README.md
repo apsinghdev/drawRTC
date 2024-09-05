@@ -7,7 +7,7 @@ A real-time collaboration project to draw with your friends.
 ## Demo
 (click on the thumbnail below)
 
-[![Demo video](https://img.youtube.com/vi/74T8SncLnE8/maxresdefault.jpg)](https://youtu.be/HuAL1eiMnSw)
+[![Demo video](./demoVideoThumbnail.jpeg)](https://youtu.be/HuAL1eiMnSw)
 
 ### Note
 
