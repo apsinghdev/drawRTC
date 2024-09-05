@@ -254,7 +254,6 @@ function App() {
   useEffect(() => {
     const canvas = document.getElementById("canvas");
     canvas.addEventListener("click", () => {
-      console.log("clicked");
       if (showMenu) {
         setShowMenu(false);
       }
