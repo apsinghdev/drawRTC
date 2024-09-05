@@ -11,6 +11,7 @@ function Canvas(props){
           className="h-full w-86vw"
           style={{backgroundColor: `${canvasColor}`}}
           ref={props.canvasRef}
+          id="canvas"
         ></canvas>
         {props.showMenu && <Menu></Menu>}
       </div>

@@ -250,6 +250,17 @@ function App() {
     }
   }, []);
 
+  // Hook to hide the menu when user click elsewhere on the screen
+  useEffect(() => {
+    const canvas = document.getElementById("canvas");
+    canvas.addEventListener("click", () => {
+      console.log("clicked");
+      if (showMenu) {
+        setShowMenu(false);
+      }
+    })
+  }, [showMenu]);
+
   return (
     <div id="container">
       <Sidebar
