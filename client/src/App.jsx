@@ -45,10 +45,6 @@ function App() {
   const { socket, setSocket } = useSocket();
   const [ messageText, setMessageText ] = useRecoilState(messageTxtAtom);
 
-  function toggleMenu() {
-    setShowMenu(!showMenu);
-  }
-
   const canvasRef = useRef(null);
   const sidebarRef = useRef(null);
   let lineWidth;
@@ -268,7 +264,8 @@ function App() {
         clearOnClick={clearOnClick}
         ref={sidebarRef}
         id="clear"
-        toggleMenu={toggleMenu}
+        showMenu={showMenu}
+        setShowMenu={setShowMenu}
       ></Sidebar>
       <Canvas canvasRef={canvasRef}></Canvas>
       {eraserMode && <EraserCursor></EraserCursor>}
