@@ -9,7 +9,7 @@ function Sidebar(props){
         className="flex flex-col w-64 bg-gradient-to-r from-slate-900 to-slate-700 relative"
         ref={props.ref}
       >
-        <Header toggleMenu={props.toggleMenu}></Header>
+        <Header showMenu={props.showMenu} setShowMenu={props.setShowMenu}></Header>
         <Toolbar
           clearOnClick={props.clearOnClick}
           id={props.id}
