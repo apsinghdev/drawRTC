@@ -1,6 +1,4 @@
 /* eslint-disable react/prop-types */
-import { FaBars } from "react-icons/fa";
-
 function Header(props) {
   return (
     <div className="flex py-5 justify-around bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% w-full items-center">
@@ -8,7 +6,7 @@ function Header(props) {
         drawRTC
       </h1>
       <div className="cursor-pointer" id="options">
-        <FaBars size={25} onClick={props.toggleMenu} />
+        <span className="text-white hover:text-emerald-300 text-2xl" onClick={props.toggleMenu}>≡</span>
       </div>
     </div>
   );
