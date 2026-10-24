@@ -18,50 +18,57 @@ ysocketio.initialize();
 
 app.use(cors({origin: '*'}))
 
-app.get('/', ()=>{
-    console.log('running')
-})
+app.get('/', (req, res) => {
+    res.status(200).json({ status: "ok", message: "drawRTC server running" });
+});
 
-app.get('/test', (res) => {
-    res.send(JSON.stringify({ok: true}));
-})
+app.get('/test', (req, res) => {
+    res.status(200).json({ ok: true });
+});
 
 io.on('connection', (socket) => {
 
-    socket.on('joinRoom', ({room_id}) => {
-        socket.join(room_id);
-        console.log(`User ${socket.id} joined room ${room_id}`);
-    })
+    socket.on('joinRoom', (data) => {
+        const roomId = data?.room_id;
+        if (!roomId) return;
+        socket.join(roomId);
+        console.log(`User ${socket.id} joined room ${roomId}`);
+    });
 
-    socket.on('draw', (data)=>{
-        const room = data.room_id;
+    socket.on('draw', (data) => {
+        const room = data?.room_id;
+        if (!room) return;
         socket.to(room).emit('draw', data);
-    })
+    });
 
     socket.on('clear', (data) => {
-        const room = data.room_id;
+        const room = data?.room_id;
+        if (!room) return;
         socket.to(room).emit('clear');
-    })
+    });
 
-    socket.on('open-text-editor', data => {
-        const room = data.room_id;
+    socket.on('open-text-editor', (data) => {
+        const room = data?.room_id;
+        if (!room) return;
         socket.to(room).emit("open-text-editor", data);
-    })
+    });
 
-    socket.on('close-text-editor', data => {
-        const room = data.room_id;
+    socket.on('close-text-editor', (data) => {
+        const room = data?.room_id;
+        if (!room) return;
         socket.to(room).emit("close-text-editor", data);
-    })
+    });
     
     socket.on("text-updated", (data) => {
-        const room = data.room_id;
+        const room = data?.room_id;
+        if (!room) return;
         socket.to(room).emit("text-updated", data);
     });
 
     socket.on("disconnect", () => {
         console.log(`${socket.id} disconnected`);
-    })
-})
+    });
+});
 
 server.listen(PORT, ()=>{
     console.log(`server running on ${PORT}`)
